@@ -26,7 +26,7 @@ d3.csv("/data/data.csv", function(data) {
 			xScale = d3.scaleLinear().rangeRound([0, width]),
 			yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
 			color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
-			xAxis = d3.axisBottom(xScale),
+			xAxis = d3.axisBottom(xScale).tickFormat(d3.format(".0%")),
 			yAxis =  d3.axisLeft(yScale),
 			svg = d3.select("#"+domEle).append("svg")
 					.attr("width", width + margin.left + margin.right)
@@ -42,7 +42,7 @@ d3.csv("/data/data.csv", function(data) {
 			var layers= stack(data);
 				data.sort(function(a, b) { return b.year - a.year; });
 				yScale.domain(data.map(function(d) {return d.year; }));
-				xScale.domain([0,d3.max(data, function(d) {console.log(d["total_" + category]); return d["total_" + category]})]);
+				xScale.domain([0,d3.max(data, function(d) {return d["total_" + category]})]);
 
 
 			var layer = svg.selectAll(".layer")
@@ -141,6 +141,14 @@ d3.csv("/data/data.csv", function(data) {
     }
 	var initStackedBarChartUpdate = {
 		draw: function(config) {
+
+			function getTickFormat() {
+				if (selectedCategory == "percent") {
+					return d3.format(".0%")
+				} else {
+					return d3.format(".2s")
+				}
+			}
 			chart = this,
 			domEle = config.element,
 			stackKey = config.key,
@@ -151,12 +159,11 @@ d3.csv("/data/data.csv", function(data) {
 			xScale = d3.scaleLinear().rangeRound([0, width]),
 			yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
 			color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
-			xAxis = d3.axisBottom(xScale),
+			xAxis = d3.axisBottom(xScale).tickFormat(getTickFormat()),
 			yAxis =  d3.axisLeft(yScale)
 
 			var stack = d3.stack()
 				.keys(stackKey)
-				/*.order(d3.stackOrder)*/
 				.offset(d3.stackOffsetNone);
 			var layers= stack(data);
 				data.sort(function(a, b) { return b.year - a.year; });
@@ -166,13 +173,10 @@ d3.csv("/data/data.csv", function(data) {
 
 			var layer = svg.selectAll(".layer")
 			 	.data(layers)
-			// 	.enter().append("g")
-			// 	.attr("class", "layer")
 			 	.style("fill", function(d, i) { return color(i); });
 
 			layer.selectAll("rect")
 			  	.data(function(d) {console.log(d); return d; })
-			//  	.enter().append("rect")
 			   	.attr("y", function(d) {return yScale(d.data.year); })
 			   	.attr("x", function(d) { return xScale(d[0]); })
 			   	.transition()
@@ -181,9 +185,7 @@ d3.csv("/data/data.csv", function(data) {
 			   	.attr("height", yScale.bandwidth())
 			   	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
 
-			// svg.append("g")
 			d3.select(".axis--x")
-			// 	.attr("transform", "translate(0," + (height+5) + ")")
 			 	.transition().duration(1500).ease(d3.easeSinInOut)
 			 	.call(xAxis);
 
