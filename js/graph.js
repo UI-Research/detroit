@@ -1,16 +1,22 @@
-d3.csv("/data/data-percent.csv", function(data) {
-  data.forEach(function(d) {
-    d.mainstream_percent = +d.mainstream_percent;
-    d.private_percent = +d.private_percent;
-    d.mission_percent = +d.mission_percent;
-    d.total_percent = +d.total_percent;
-    d.year = +d.year
+d3.csv("/data/data.csv", function(data) {
+	  data.forEach(function(d) {
+	    d.mainstream_percent = +d.mainstream_percent;
+	    d.private_percent = +d.private_percent;
+	    d.mission_percent = +d.mission_percent;
+	    d.total_percent = +d.total_percent;
+	    d.mainstream_dollar = +d.mainstream_dollar;
+	    d.private_dollar = +d.private_dollar;
+	    d.mission_dollar = +d.mission_dollar;
+	    d.total_dollar = +d.total_dollar;
+	    d.year = +d.year
 
-  });
-	  console.log(data[0]);
+	  });
+
+
+  console.log(data[0]);
 	var initStackedBarChart = {
 		draw: function(config) {
-			me = this,
+			chart = this,
 			domEle = config.element,
 			stackKey = config.key,
 			data = config.data,
@@ -28,15 +34,16 @@ d3.csv("/data/data-percent.csv", function(data) {
 					.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+
 			var stack = d3.stack()
 				.keys(stackKey)
 				/*.order(d3.stackOrder)*/
 				.offset(d3.stackOffsetNone);
-		
 			var layers= stack(data);
 				data.sort(function(a, b) { return b.year - a.year; });
 				yScale.domain(data.map(function(d) {return d.year; }));
-				xScale.domain([0,1]);
+				xScale.domain([0,d3.max(data, function(d) {console.log(d["total_" + category]); return d["total_" + category]})]);
+
 
 			var layer = svg.selectAll(".layer")
 				.data(layers)
@@ -44,29 +51,149 @@ d3.csv("/data/data-percent.csv", function(data) {
 				.attr("class", "layer")
 				.style("fill", function(d, i) { return color(i); });
 
-			  layer.selectAll("rect")
-				  .data(function(d) { return d; })
-				.enter().append("rect")
-				  .attr("y", function(d) {return yScale(d.data.year); })
-				  .attr("x", function(d) { return xScale(d[0]); })
-				  .attr("height", yScale.bandwidth())
-				  .attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
+			layer.selectAll("rect")
+			  	.data(function(d) { return d; })
+			  	.enter().append("rect")
+			  	.attr("y", function(d) {return yScale(d.data.year); })
+			  	.attr("x", function(d) { return xScale(d[0]); })
+			  	.transition()
+            	.duration(700)
+            	.ease(d3.easeLinear)
+			  	.attr("height", yScale.bandwidth())
+			  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
 
-				svg.append("g")
+			svg.append("g")
 				.attr("class", "axis axis--x")
 				.attr("transform", "translate(0," + (height+5) + ")")
 				.call(xAxis);
 
-				svg.append("g")
+			svg.append("g")
 				.attr("class", "axis axis--y")
 				.attr("transform", "translate(0,0)")
-				.call(yAxis);							
+				.call(yAxis);	
+
+	      	d3.selectAll(".toggle_button")
+	         	.on("click", function(){
+		          	var start = d3.select(".toggle_button.active").node().id.split("_")[0]
+		          	var end = this.id.split("_")[0]
+		          	d3.selectAll(".toggle_button.active").classed("active",false)
+		          	d3.select(this).classed("active",true)
+		            transitionState(start, end)
+
+	        	})
+
 		}
 	}
-	var key = ["mission_percent","private_percent","mainstream_percent"];
+
+
+	var selectedCategory = "percent";
+	var categoryFunction = function category() {
+		return selectedCategory
+	}
+	var category = categoryFunction();
+	console.log(category)
+	var key = ["mission_" + category , "private_" + category, "mainstream_" + category];
+	// var key = ["mission_percent","private_percent","mainstream_percent"];
+	// var key2 = ["mission_dollar","private_dollar","mainstream_dollar"];
 	initStackedBarChart.draw({
 		data: data,
 		key: key,
 		element: 'stacked-bar'
 	});
+
+	// function getCategory() {
+	// 	console.log(d3.select(".toggle_button.active").node().id.split("_")[0])
+	// 	return d3.select(".toggle_button.active").node().id.split("_")[0]
+
+	// }
+
+  	function transitionState (start, end) {
+
+        	if (start == end ) console.log("hi")
+        		else if ((start == "percent") && (end == "dollar")) percentToDollar(start, end)
+        		else if ((start == "dollar") && (end == "percent")) dollarToPercent(start, end)
+
+    }
+
+    function percentToDollar(start, end) {
+    		selectedCategory = "dollar";
+			category = categoryFunction();
+			var key = ["mission_" + category , "private_" + category, "mainstream_" + category];
+    		initStackedBarChartUpdate.draw({
+			data: data,
+			key: key,
+			element: 'stacked-bar'
+		});
+			//chartUpdate();
+
+
+    }
+    function dollarToPercent(start, end) {
+    		selectedCategory = "percent"
+    		category = categoryFunction();
+    		var key = ["mission_" + category , "private_" + category, "mainstream_" + category];
+    		initStackedBarChartUpdate.draw({
+			data: data,
+			key: key,
+			element: 'stacked-bar'
+		});
+
+    }
+	var initStackedBarChartUpdate = {
+		draw: function(config) {
+			chart = this,
+			domEle = config.element,
+			stackKey = config.key,
+			data = config.data,
+			margin = {top: 20, right: 20, bottom: 30, left: 50},
+			width = 960 - margin.left - margin.right,
+			height = 500 - margin.top - margin.bottom,
+			xScale = d3.scaleLinear().rangeRound([0, width]),
+			yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
+			color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
+			xAxis = d3.axisBottom(xScale),
+			yAxis =  d3.axisLeft(yScale)
+
+			var stack = d3.stack()
+				.keys(stackKey)
+				/*.order(d3.stackOrder)*/
+				.offset(d3.stackOffsetNone);
+			var layers= stack(data);
+				data.sort(function(a, b) { return b.year - a.year; });
+				yScale.domain(data.map(function(d) {return d.year; }));
+				xScale.domain([0,d3.max(data, function(d) {console.log(d["total_" + category]); return d["total_" + category]})]);
+
+
+			var layer = svg.selectAll(".layer")
+			 	.data(layers)
+			// 	.enter().append("g")
+			// 	.attr("class", "layer")
+			 	.style("fill", function(d, i) { return color(i); });
+
+			layer.selectAll("rect")
+			  	.data(function(d) {console.log(d); return d; })
+			//  	.enter().append("rect")
+			   	.attr("y", function(d) {return yScale(d.data.year); })
+			   	.attr("x", function(d) { return xScale(d[0]); })
+			   	.transition()
+            	.duration(700)
+            	.ease(d3.easeLinear)
+			   	.attr("height", yScale.bandwidth())
+			   	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
+
+			// svg.append("g")
+			d3.select(".axis--x")
+			// 	.attr("transform", "translate(0," + (height+5) + ")")
+			 	.transition().duration(1500).ease(d3.easeSinInOut)
+			 	.call(xAxis);
+
+
+
+		}
+	}
+
+
+
+
+
 });
