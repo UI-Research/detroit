@@ -1,0 +1,66 @@
+body, html {
+	font-family: "Lato", sans-serif;
+}
+
+.toggle_button{
+    margin-bottom: 30px;
+    padding: 5 10 5 10px;
+    float: left;
+    margin-right: 10px;
+    color: #404041;
+    cursor: pointer;
+}
+
+.toggle_button.active span{
+  background-color: #1696d2;
+  color: white;
+}
+.toggle_button span:hover{
+  background-color: #231f20;
+  color: white;
+}
+
+.toggle_button span{
+    color:#333;
+    background-color: #f2f2f2;
+    padding: 12px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size:15px;
+    border:solid 1px #e1e1e1;
+}
+
+#toggle_options {
+    position: relative;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 30px;
+}
+
+#toggles {
+    width: 60%;
+    padding-top: 10px;
+    float: left;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+.axis line,
+.axis path {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.path-line {
+  fill: none;
+  stroke: yellow;
+  stroke-width: 1.5px;
+}
+svg {
+  background: #f0f0f0;
+}
+
+h2 {
+	font-family: "Lato", sans-serif;
+}
