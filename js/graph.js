@@ -1,3 +1,6 @@
+var HEADERS =  ["Mission", "Private", "Mainstream"],
+    COLORS = ["#ec008b","#fdbf11","#1696d2"];
+
 d3.csv("/data/data.csv", function(data) {
 	  data.forEach(function(d) {
 	    d.mainstream_percent = +d.mainstream_percent;
@@ -33,6 +36,40 @@ d3.csv("/data/data.csv", function(data) {
 					.attr("height", height + margin.top + margin.bottom)
 					.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+			var statsSvg = d3.select("#stats-div")
+				.append("svg")
+				.attr("width", width)
+				.attr("height", height/10 + margin.top + margin.bottom)
+				 for (i=0; i<=3; i++){
+			      if(i !== 3){
+			        statsSvg.append("text")
+			          .attr("class", "stats-header")
+			           .attr("x", function() {
+			            // if (IS_MOBILE && !IS_PHONE) {
+			            //     return (.068*width)*i;
+			            //   }
+			            // if (IS_PHONE) {  
+			            //     return (.082*width)*i; 
+			            // }
+			                  return (.3*width)*i;
+			              })
+			          .attr("y", height*.05)
+			          .text(function(){
+			              return (HEADERS[i])
+			          })
+			          .style("fill", function(){
+			              return (COLORS[i])
+			          })
+			          .attr("transform", function(d) { 
+			            // if (IS_PHONE) {
+			            //   return "translate(" + width/14 + ", "+ height/2 +")";
+			            // }
+			            return "translate("+ width*.2 +", 0)"; 
+			          })
+			      }
+			  }
+
 
 
 			var stack = d3.stack()
