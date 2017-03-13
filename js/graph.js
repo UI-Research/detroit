@@ -42,33 +42,55 @@ d3.csv("/data/data.csv", function(data) {
 				.attr("width", width)
 				.attr("height", height/10 + margin.top + margin.bottom)
 				 for (i=0; i<=3; i++){
-			      if(i !== 3){
-			        statsSvg.append("text")
-			          .attr("class", "stats-header")
-			           .attr("x", function() {
-			            // if (IS_MOBILE && !IS_PHONE) {
-			            //     return (.068*width)*i;
-			            //   }
-			            // if (IS_PHONE) {  
-			            //     return (.082*width)*i; 
-			            // }
-			                  return (.3*width)*i;
-			              })
-			          .attr("y", height*.05)
-			          .text(function(){
-			              return (HEADERS[i])
-			          })
-			          .style("fill", function(){
-			              return (COLORS[i])
-			          })
-			          .attr("transform", function(d) { 
-			            // if (IS_PHONE) {
-			            //   return "translate(" + width/14 + ", "+ height/2 +")";
-			            // }
-			            return "translate("+ width*.2 +", 0)"; 
-			          })
-			      }
-			  }
+			      	if(i !== 3){
+				        statsSvg.append("text")
+				          .attr("class", "stats-header")
+				          .attr("x", function() {
+				            // if (IS_MOBILE && !IS_PHONE) {
+				            //     return (.068*width)*i;
+				            //   }
+				            // if (IS_PHONE) {  
+				            //     return (.082*width)*i; 
+				            // }
+				                  return (.3*width)*i;
+				          })
+				          .attr("y", height*.05)
+				          .text(function(){
+				              return (HEADERS[i])
+				          })
+				          .style("fill", function(){
+				              return (COLORS[i])
+				          })
+				          .attr("transform", function(d) { 
+				            // if (IS_PHONE) {
+				            //   return "translate(" + width/14 + ", "+ height/2 +")";
+				            // }
+				            	return "translate("+ width*.2 +", 0)"; 
+				          })
+
+				  		statsSvg.append("text")
+				          .attr("class", function() {
+				            return "stats-text " + "text" + i})
+				          .attr("x", function() {
+				            // if (IS_MOBILE && !IS_PHONE) {
+				            //     return (.068*width)*i;
+				            //   }
+				            // if (IS_PHONE) {  
+				            //     return (.082*width)*i; 
+				            // }
+				                  return (.3*width)*i;
+				          })
+				          .attr("y", height*.1)
+				          .attr("transform", function(d) { 
+				            // if (IS_PHONE) {
+				            //   return "translate(" + width/14 + ", "+ height/2 +")";
+				            // }
+				            	return "translate("+ width*.2 +", 0)"; 
+				          })
+
+				     
+			      	}
+			  	}
 
 
 
@@ -89,15 +111,24 @@ d3.csv("/data/data.csv", function(data) {
 				.style("fill", function(d, i) { return color(i); });
 
 			layer.selectAll("rect")
-			  	.data(function(d) { return d; })
+			  	.data(function(d) {console.log(d); return d; })
 			  	.enter().append("rect")
 			  	.attr("y", function(d) {return yScale(d.data.year); })
 			  	.attr("x", function(d) { return xScale(d[0]); })
+			  	.attr("class", function(d) {return "year" + d.data.year})
 			  	.transition()
             	.duration(700)
             	.ease(d3.easeLinear)
 			  	.attr("height", yScale.bandwidth())
-			  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
+			  	.attr("width", function(d) {console.log(xScale(d[1]) - xScale(d[0]));return xScale(d[1]) - xScale(d[0]) })
+			
+
+			 d3.selectAll('rect')
+			  	.on("mouseover", function() {
+			  var classYear = d3.select(this).attr("class")
+	       			console.log(classYear)
+			  		showStats(classYear);
+			  	})
 
 			svg.append("g")
 				.attr("class", "axis axis--x")
@@ -118,6 +149,17 @@ d3.csv("/data/data.csv", function(data) {
 		            transitionState(start, end)
 
 	        	})
+
+	       var showStats = function(classYear) {
+
+	       	console.log(d3.selectAll("." + classYear).each(function(d, i) {
+	
+	       		d3.select(this).datum()._groups
+	    
+	       }))
+	
+	 
+	       }
 
 		}
 	}
