@@ -125,11 +125,14 @@ d3.csv("data/data.csv", function(data) {
 
 			 d3.selectAll('rect')
 			  	.on("mouseover", function() {
-			  var classYear = d3.select(this).attr("class")
-	       			console.log(classYear)
-			  		showStats(classYear);
+			  var yearClass = d3.select(this).attr("class")
+	       			console.log(yearClass)
+			  		showStats(yearClass);
 			  	})
-
+			  	.on("mouseout", function() {
+			  		d3.selectAll(".stats-text")
+			  			.html("")
+			  	})
 			svg.append("g")
 				.attr("class", "axis axis--x")
 				.attr("transform", "translate(0," + (height+5) + ")")
@@ -150,13 +153,20 @@ d3.csv("data/data.csv", function(data) {
 
 	        	})
 
-	       var showStats = function(classYear) {
+	       var showStats = function(yearClass) {
+	       	console.log(yearClass)
+	       	var formatPercent = d3.format(",.2%")
+	       	var missionPercent = d3.selectAll("." + yearClass).data()[0].data.mission_percent
+	       	var privatePercent = d3.selectAll("." + yearClass).data()[0].data.private_percent
+	       	var mainstreamPercent = d3.selectAll("." + yearClass).data()[0].data.mainstream_percent
 
-	       	console.log(d3.selectAll("." + classYear).each(function(d, i) {
-	
-	       		d3.select(this).datum()._groups
-	    
-	       }))
+	       	d3.select(".text0")
+	       		.html(formatPercent(missionPercent))
+	       	d3.select(".text1")
+	       		.html(formatPercent(privatePercent))
+	       	d3.select(".text2")
+	       		.html(formatPercent(mainstreamPercent))
+
 	
 	 
 	       }
