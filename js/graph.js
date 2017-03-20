@@ -1,7 +1,7 @@
 var HEADERS =  ["Mission", "Private", "Mainstream"],
     COLORS = ["#ec008b","#fdbf11","#1696d2"];
 
-d3.csv("/data/data.csv", function(data) {
+d3.csv("data/data.csv", function(data) {
 	  data.forEach(function(d) {
 	    d.mainstream_percent = +d.mainstream_percent;
 	    d.private_percent = +d.private_percent;
