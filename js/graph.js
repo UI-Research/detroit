@@ -154,18 +154,26 @@ d3.csv("data/data.csv", function(data) {
 	        	})
 
 	       var showStats = function(yearClass) {
-	       	console.log(yearClass)
-	       	var formatPercent = d3.format(",.2%")
-	       	var missionPercent = d3.selectAll("." + yearClass).data()[0].data.mission_percent
-	       	var privatePercent = d3.selectAll("." + yearClass).data()[0].data.private_percent
-	       	var mainstreamPercent = d3.selectAll("." + yearClass).data()[0].data.mainstream_percent
+	       	var category = d3.select(".toggle_button.active").attr("id").split("_")[0]
+	       	var statFormatter = function() {
+	       		if (category == "percent") {
+	       			return d3.format(",.2%")
+	       		} else { 
+	       			return d3.format("$,")
+	       		}
+	       	} 
+	       	var statFormat = statFormatter();
+	       	console.log(statFormat)
+	       	var missionStat = d3.selectAll("." + yearClass).data()[0].data["mission_" + category]
+	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
+	       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
 
 	       	d3.select(".text0")
-	       		.html(formatPercent(missionPercent))
+	       		.html(statFormat(missionStat))
 	       	d3.select(".text1")
-	       		.html(formatPercent(privatePercent))
+	       		.html(statFormat(privateStat))
 	       	d3.select(".text2")
-	       		.html(formatPercent(mainstreamPercent))
+	       		.html(statFormat(mainstreamStat))
 
 	
 	 
@@ -190,11 +198,6 @@ d3.csv("data/data.csv", function(data) {
 		element: 'stacked-bar'
 	});
 
-	// function getCategory() {
-	// 	console.log(d3.select(".toggle_button.active").node().id.split("_")[0])
-	// 	return d3.select(".toggle_button.active").node().id.split("_")[0]
-
-	// }
 
   	function transitionState (start, end) {
 
