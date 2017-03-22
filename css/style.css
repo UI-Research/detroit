@@ -2,6 +2,13 @@ body, html {
 	font-family: "Lato", sans-serif;
 }
 
+rect {
+  opacity: .8;
+}
+
+rect.selected {
+  opacity: 1;
+}
 .toggle_button{
     margin-bottom: 30px;
     padding: 5 10 5 10px;

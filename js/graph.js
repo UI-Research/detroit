@@ -128,10 +128,14 @@ d3.csv("data/data.csv", function(data) {
 			  var yearClass = d3.select(this).attr("class")
 	       			console.log(yearClass)
 			  		showStats(yearClass);
+			  d3.selectAll("." + yearClass)
+			  	.classed("selected", true)
 			  	})
 			  	.on("mouseout", function() {
 			  		d3.selectAll(".stats-text")
 			  			.html("")
+				  	 d3.selectAll("rect")
+				  	.classed("selected", false)
 			  	})
 			svg.append("g")
 				.attr("class", "axis axis--x")
@@ -159,7 +163,7 @@ d3.csv("data/data.csv", function(data) {
 	       		if (category == "percent") {
 	       			return d3.format(",.2%")
 	       		} else { 
-	       			return d3.format("$,")
+	       			return d3.format("$,.0f")
 	       		}
 	       	} 
 	       	var statFormat = statFormatter();
