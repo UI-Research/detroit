@@ -59,7 +59,7 @@ rect.selected {
 }
 
 #toggles {
-    width: 60%;
+    width: 100%;
     padding-top: 10px;
     float: left;
 }
@@ -73,6 +73,14 @@ rect.selected {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+
+.stats-header {
+  font-size: 16px;
+}
+
+.stats-text {
+  font-size: 16px;
+}
 .path-line {
   fill: none;
   stroke: yellow;
@@ -83,4 +91,36 @@ rect.selected {
 h2 {
 	font-family: "Lato", sans-serif;
   font-size: 30px;
+}
+
+
+
+@media (max-width: 550px) {
+  .toggle_button span:hover {
+    background-color: #1696d2 !important;
+  }
+    .stats-header {
+      font-size: 14px;
+    }
+    .stats-text {
+      font-size: 14px;
+    }
+    h2 {
+      font-size: 18px;
+    }
+}
+
+@media (max-width: 450px) {
+    #isPhone {
+      display: block;
+    }
+    .stats-header {
+      font-size: 12px;
+    }
+    .stats-text {
+      font-size: 12px;
+    }
+    .axis text {
+      font-size: 11px;
+    }
 }
