@@ -1,6 +1,45 @@
 var HEADERS =  ["Mission", "Private", "Mainstream"],
     COLORS = ["#ec008b","#fdbf11","#1696d2"];
+var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
+var IS_PHONE = d3.select("#isPhone").style("display") == "block"
 
+function drawGraph(container_width){
+
+  if (container_width == undefined || isNaN(container_width)) {
+        container_width = 1170;
+    }
+    if (container_width <= 400) {
+        IS_PHONE = true
+        var chart_aspect_height = .7;
+        var margin = {
+            top: 10,
+            right: 10,
+            bottom: 10,
+            left: 10
+        };
+    }
+    // else if (container_width > 400 && container_width <= 600) {
+    //     IS_PHONE = true
+    //     var chart_aspect_height = .7;
+    //     var margin = {
+    //         top: 10,
+    //         right: 10,
+    //         bottom: 10,
+    //         left: 10
+    //     };
+    //} 
+    else {
+      IS_PHONE = false
+      console.log(container_width)
+      var chart_aspect_height = 0.62;
+        var margin = {
+            top: 10,
+            right: 10,
+            bottom: 10,
+            left: 10
+        };
+    }
+      
 d3.csv("data/data.csv", function(data) {
 	  data.forEach(function(d) {
 	    d.mainstream_percent = +d.mainstream_percent;
@@ -23,9 +62,11 @@ d3.csv("data/data.csv", function(data) {
 			domEle = config.element,
 			stackKey = config.key,
 			data = config.data,
-			margin = {top: 20, right: 20, bottom: 30, left: 50},
-			width = 960 - margin.left - margin.right,
-			height = 500 - margin.top - margin.bottom,
+			aspect_width = 25,
+			aspect_height = 23;
+			margin = {top: 20, right: 30, bottom: 50, left: 40},
+			width = container_width - margin.left - margin.right,
+  			height = Math.ceil((width * aspect_height) / aspect_width) - margin.top - margin.bottom,
 			xScale = d3.scaleLinear().rangeRound([0, width]),
 			yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
 			color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
@@ -37,10 +78,11 @@ d3.csv("data/data.csv", function(data) {
 					.append("g")
 					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+			d3.select("div#stats-div").empty();			
 			var statsSvg = d3.select("#stats-div")
 				.append("svg")
 				.attr("width", width)
-				.attr("height", height/10 + margin.top + margin.bottom)
+				.attr("height", height/12 + margin.top)
 				 for (i=0; i<=3; i++){
 			      	if(i !== 3){
 				        statsSvg.append("text")
@@ -139,7 +181,7 @@ d3.csv("data/data.csv", function(data) {
 			  	})
 			svg.append("g")
 				.attr("class", "axis axis--x")
-				.attr("transform", "translate(0," + (height+5) + ")")
+				.attr("transform", "translate(0," + (height*.99) + ")")
 				.call(xAxis);
 
 			svg.append("g")
@@ -196,6 +238,7 @@ d3.csv("data/data.csv", function(data) {
 	var key = ["mission_" + category , "private_" + category, "mainstream_" + category];
 	// var key = ["mission_percent","private_percent","mainstream_percent"];
 	// var key2 = ["mission_dollar","private_dollar","mainstream_dollar"];
+	d3.select("#stacked-bar").empty();
 	initStackedBarChart.draw({
 		data: data,
 		key: key,
@@ -251,7 +294,7 @@ d3.csv("data/data.csv", function(data) {
 			data = config.data,
 			margin = {top: 20, right: 20, bottom: 30, left: 50},
 			width = 960 - margin.left - margin.right,
-			height = 500 - margin.top - margin.bottom,
+			height = width - margin.top - margin.bottom,
 			xScale = d3.scaleLinear().rangeRound([0, width]),
 			yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
 			color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
@@ -291,7 +334,8 @@ d3.csv("data/data.csv", function(data) {
 	}
 
 
+})
 
+};
 
-
-});
+ var pymChild = new pym.Child({ renderCallback: drawGraph, polling: 500 });
