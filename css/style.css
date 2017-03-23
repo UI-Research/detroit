@@ -101,12 +101,12 @@ text.selected {
   stroke-width: 1.5px;
 }
 
+.header {
 
-
-h2 {
-	font-family: "Lato", sans-serif;
-  font-size: 30px;
+  font-family: "Lato", sans-serif;
+  font-size: 24px;
 }
+
 
 
 
@@ -124,7 +124,7 @@ h2 {
     .stats-text {
       font-size: 14px;
     }
-    h2 {
+    .header {
       font-size: 18px;
     }
 }

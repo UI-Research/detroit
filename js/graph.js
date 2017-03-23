@@ -7,6 +7,7 @@ var IS_PHONE = d3.select("#isPhone").style("display") == "block"
 
 function drawGraph(container_width){
 
+
 	var showStats = function(yearClass) {
 	       	var category = d3.select(".toggle_button.active").attr("id").split("_")[0]
 	       	var statFormatter = function() {
@@ -26,7 +27,6 @@ function drawGraph(container_width){
 	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
 	       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
 	       	var yearLabel = d3.selectAll(".year-label-" + yearClass).attr('class')
-	console.log(yearLabel)
 	       	d3.select(".text0")
 	       		.html(year)
 	       	d3.select(".text1")
@@ -91,6 +91,16 @@ function drawGraph(container_width){
 
 				yAxis =  d3.axisLeft(yScale)
 				$("#" + domEle).empty()
+				svgHeader = d3.select("#header").append("svg")
+							.attr("width", width + margin.left + margin.right)
+							.attr("height", width/8)
+							.append("g")
+							.attr("transform", "translate(0," + width*.05+ ")");
+
+
+				svgHeader.append("text")
+					.attr("class", "header")
+				getHeader();
 				svg = d3.select("#"+domEle).append("svg")
 						.attr("width", width + margin.left + margin.right)
 						.attr("height", height + margin.top + margin.bottom)
@@ -292,7 +302,15 @@ function drawGraph(container_width){
 				return d3.format("$.2s")
 			}
 		}
-
+		function getHeader() {
+			if (selectedCategory == "percent") {
+				d3.select(".header")
+					.html("Percentage of Lending Volume by Type")
+			} else {
+				d3.select(".header")
+					.html("Share of Lending Volume by Type")			
+			}
+		}
 		var initStackedBarChartUpdate = {
 			draw: function(config) {
 
@@ -307,6 +325,8 @@ function drawGraph(container_width){
 				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
 				var xAxis = (IS_MOBILE) ? xAxis_mobile : xAxis_normal;				
 				yAxis =  d3.axisLeft(yScale)
+
+				getHeader();
 
 				var stack = d3.stack()
 					.keys(stackKey)
