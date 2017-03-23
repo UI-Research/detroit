@@ -336,7 +336,7 @@ function drawGraph(container_width){
 				   	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
 
 				d3.select(".axis--x")
-				 	.transition().duration(1500)
+				 	.transition()
 				 	.ease(d3.easeSinInOut)
 				 	.call(xAxis);
 				d3.selectAll("rect.year2015")
