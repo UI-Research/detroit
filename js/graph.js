@@ -202,6 +202,8 @@ function drawGraph(container_width){
 
 				 d3.selectAll('rect')
 				  	.on("mouseover", function() {
+				  		d3.selectAll(".stats-text")
+				  			.html("")
 					  	 d3.selectAll("rect")
 					  		.classed("selected", false)
 					var yearClass = d3.select(this).attr("class")
@@ -211,13 +213,9 @@ function drawGraph(container_width){
 				  	.classed("selected", true)
 				  	})
 				  	.on("mouseout", function() {
-				  		d3.selectAll(".stats-text")
-				  			.html("")
-					  	 d3.selectAll("rect")
-					  		.classed("selected", false)
-					  	d3.selectAll("rect.year2015")
-				  			.classed("selected", true)
-				  		showStats("year2015")
+
+
+
 				  	})
 
 
