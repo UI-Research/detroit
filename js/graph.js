@@ -194,7 +194,6 @@ function drawGraph(container_width){
 				  	.attr("x", function(d) { return xScale(d[0]); })
 				  	.attr("class", function(d) {return "year" + d.data.year})
 				  	.transition()
-	            	.duration(700)
 	            	.ease(d3.easeLinear)
 				  	.attr("height", yScale.bandwidth())
 				  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) })
@@ -330,7 +329,6 @@ function drawGraph(container_width){
 				   	.attr("x", function(d) { return xScale(d[0]); })
 				  	.attr("class", function(d) {return "year" + d.data.year})
 				   	.transition()
-	            	.duration(700)
 	            	.ease(d3.easeLinear)
 				   	.attr("height", yScale.bandwidth())
 				   	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) });
