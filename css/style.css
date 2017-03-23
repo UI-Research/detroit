@@ -15,11 +15,15 @@ body, html {
 }
 
 rect {
-  opacity: .8;
+  opacity: .7;
 }
 
 rect.selected {
-  opacity: 1;
+  opacity: .9;
+}
+
+text.selected {
+  font-weight:  bold;
 }
 .toggle_button{
     margin-bottom: 30px;
@@ -66,16 +70,26 @@ rect.selected {
 
 .axis text {
   font-size: 12px;
+  font-family: "Lato", sans-serif;
+
 }
-.axis line,
-.axis path {
+.axis--x line,
+.axis--x path {
   fill: none;
   stroke: #000;
+  stroke-width: 1px;
+  opacity: .2;
   shape-rendering: crispEdges;
 }
 
+.axis--y line,
+.axis--y path {
+  opacity: 0;
+}
+
 .stats-header {
-  font-size: 16px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .stats-text {
@@ -88,6 +102,7 @@ rect.selected {
 }
 
 
+
 h2 {
 	font-family: "Lato", sans-serif;
   font-size: 30px;
@@ -96,6 +111,10 @@ h2 {
 
 
 @media (max-width: 550px) {
+
+  #isMobile {
+    display: block;
+  }
   .toggle_button span:hover {
     background-color: #1696d2 !important;
   }

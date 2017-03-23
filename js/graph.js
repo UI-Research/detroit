@@ -1,12 +1,49 @@
-var HEADERS =  ["Mission", "Private", "Mainstream"],
-    COLORS = ["#ec008b","#fdbf11","#1696d2"];
-
+var HEADERS =  ["YEAR", "MISSION", "PRIVATE", "MAINSTREAM"],
+    COLORS = ["#000000","#fdbf11","#1696d2"];
+    HEADER_COLORS = ["#9d9d9d", "#000000","#fdbf11","#1696d2"];
+var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
+var IS_PHONE = d3.select("#isPhone").style("display") == "block"
+		
 
 function drawGraph(container_width){
 
-var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
-var IS_PHONE = d3.select("#isPhone").style("display") == "block"
-console.log('hello')
+	var showStats = function(yearClass) {
+	       	var category = d3.select(".toggle_button.active").attr("id").split("_")[0]
+	       	var statFormatter = function() {
+	       		if (category == "percent") {
+	       			return d3.format(",.2%")
+	       		} else { 
+	       			if (IS_MOBILE) {
+	       				return d3.format("$,.2s")
+	       			}
+	       			return d3.format("$,.0f")
+	       		}
+	       	} 
+	       	var statFormat = statFormatter();
+	       	console.log(statFormat)
+	       	var year = d3.selectAll("." + yearClass).data()[0].data["year"]
+	       	var missionStat = d3.selectAll("." + yearClass).data()[0].data["mission_" + category]
+	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
+	       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
+	       	var yearLabel = d3.selectAll(".year-label-" + yearClass).attr('class')
+	console.log(yearLabel)
+	       	d3.select(".text0")
+	       		.html(year)
+	       	d3.select(".text1")
+	       		.html(statFormat(missionStat))
+	       	d3.select(".text2")
+	       		.html(statFormat(privateStat))
+	       	d3.select(".text3")
+	       		.html(statFormat(mainstreamStat))
+		  	d3.selectAll("text")
+				.classed("selected", false)
+	       	d3.select("." + yearLabel)
+	       		.classed("selected", true)
+	       		
+
+	 
+	}
+
 	  if (container_width == undefined || isNaN(container_width)) {
 	        container_width = 1170;
 	    }
@@ -48,8 +85,10 @@ console.log('hello')
 				data = config.data,
 				xScale = d3.scaleLinear().rangeRound([0, width]),
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
-				color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
-				xAxis = d3.axisBottom(xScale).tickFormat(d3.format(".0%")),
+				xAxis_normal = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height)
+				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
+				var xAxis = (IS_MOBILE) ? xAxis_mobile : xAxis_normal;
+
 				yAxis =  d3.axisLeft(yScale)
 				$("#" + domEle).empty()
 				svg = d3.select("#"+domEle).append("svg")
@@ -62,28 +101,28 @@ console.log('hello')
 					.append("svg")
 					.attr("width", width + margin.left)
 					.attr("height", height/12 + margin.top)
-					 for (i=0; i<=3; i++){
-				      	if(i !== 3){
+					 for (i=0; i<=4; i++){
+				      	if(i !== 4){
 					        statsSvg.append("text")
 					          .attr("class", "stats-header")
 					          .attr("x", function() {
 					            // if (IS_MOBILE && !IS_PHONE) {
 					            //     return (.068*width)*i;
 					            //   }
-					                  return (.3*width)*i;
+					                  return (.2*width)*i;
 					          })
 					          .attr("y", width*.04)
 					          .text(function(){
 					              return (HEADERS[i])
 					          })
 					          .style("fill", function(){
-					              return (COLORS[i])
+					              return (HEADER_COLORS[i])
 					          })
 					          .attr("transform", function(d) { 
 					            // if (IS_PHONE) {
 					            //   return "translate(" + width/14 + ", "+ height/2 +")";
 					            // }
-					            	return "translate("+ width*.2 +", 0)"; 
+					            	return "translate("+ width*.15 +", 0)"; 
 					          })
 
 					  		statsSvg.append("text")
@@ -96,7 +135,7 @@ console.log('hello')
 					            // if (IS_PHONE) {  
 					            //     return (.082*width)*i; 
 					            // }
-					                  return (.3*width)*i;
+					                  return (.2*width)*i;
 					          })
 					          .attr("y", function() {
 					          	if (IS_PHONE) {
@@ -109,13 +148,10 @@ console.log('hello')
 					            // if (IS_PHONE) {
 					            //   return "translate(" + width/14 + ", "+ height/2 +")";
 					            // }
-					            	return "translate("+ width*.2 +", 0)"; 
+					            	return "translate("+ width*.15 +", 0)"; 
 					          })
-
-					     
 				      	}
 				  	}
-
 
 
 				var stack = d3.stack()
@@ -126,13 +162,30 @@ console.log('hello')
 					data.sort(function(a, b) { return b.year - a.year; });
 					yScale.domain(data.map(function(d) {return d.year; }));
 					xScale.domain([0,d3.max(data, function(d) {return d["total_" + category]})]);
+				svg.append("g")
+					.attr("class", "axis axis--x")
+					.attr("transform", "translate(0," + (height*.995) + ")")
+					.call(xAxis);
 
+				svg.append("g")
+					.attr("class", "axis axis--y")
+					.attr("transform", "translate(0,0)")
+					.call(yAxis);	
+				d3.select(".axis--y").selectAll("text")
+			   		.attr("class", function(d) {
+			   			return "year-label-year" + d
+			   		})
+			   	d3.select(".axis--y").selectAll(".tick")
+			   		.each(function(d) {
+			   			d3.select("line")
+			   				.attr("class", "line-y")
+			   		})
 
 				var layer = svg.selectAll(".layer")
 					.data(layers)
 					.enter().append("g")
 					.attr("class", "layer")
-					.style("fill", function(d, i) { return color(i); });
+					.style("fill", function(d, i) { return COLORS[i]; });
 
 				layer.selectAll("rect")
 				  	.data(function(d) {console.log(d); return d; })
@@ -145,11 +198,14 @@ console.log('hello')
 	            	.ease(d3.easeLinear)
 				  	.attr("height", yScale.bandwidth())
 				  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) })
-				
+				d3.selectAll("rect.year2015")
+		  			.classed("selected", true)
 
 				 d3.selectAll('rect')
 				  	.on("mouseover", function() {
-				  var yearClass = d3.select(this).attr("class")
+					  	 d3.selectAll("rect")
+					  		.classed("selected", false)
+					var yearClass = d3.select(this).attr("class")
 		       			console.log(yearClass)
 				  		showStats(yearClass);
 				  d3.selectAll("." + yearClass)
@@ -159,17 +215,13 @@ console.log('hello')
 				  		d3.selectAll(".stats-text")
 				  			.html("")
 					  	 d3.selectAll("rect")
-					  	.classed("selected", false)
+					  		.classed("selected", false)
+					  	d3.selectAll("rect.year2015")
+				  			.classed("selected", true)
+				  		showStats("year2015")
 				  	})
-				svg.append("g")
-					.attr("class", "axis axis--x")
-					.attr("transform", "translate(0," + (height*.985) + ")")
-					.call(xAxis);
 
-				svg.append("g")
-					.attr("class", "axis axis--y")
-					.attr("transform", "translate(0,0)")
-					.call(yAxis);	
+
 
 		      	d3.selectAll(".toggle_button")
 		         	.on("click", function(){
@@ -181,32 +233,7 @@ console.log('hello')
 
 		        	})
 
-		       var showStats = function(yearClass) {
-		       	var category = d3.select(".toggle_button.active").attr("id").split("_")[0]
-		       	var statFormatter = function() {
-		       		if (category == "percent") {
-		       			return d3.format(",.2%")
-		       		} else { 
-		       			return d3.format("$,.0f")
-		       		}
-		       	} 
-		       	var statFormat = statFormatter();
-		       	console.log(statFormat)
-		       	var missionStat = d3.selectAll("." + yearClass).data()[0].data["mission_" + category]
-		       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
-		       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
-
-		       	d3.select(".text0")
-		       		.html(statFormat(missionStat))
-		       	d3.select(".text1")
-		       		.html(statFormat(privateStat))
-		       	d3.select(".text2")
-		       		.html(statFormat(mainstreamStat))
-
-		
-		 
-		       }
-
+		        showStats("year2015")
 			}
 		}
 
@@ -256,27 +283,32 @@ console.log('hello')
 				data: data,
 				key: key,
 				element: 'stacked-bar'
-			});
+				});
+
 
 	    }
+
+		function getTickFormat() {
+			if (selectedCategory == "percent") {
+				return d3.format(".0%")
+			} else {
+				return d3.format("$.2s")
+			}
+		}
+
 		var initStackedBarChartUpdate = {
 			draw: function(config) {
 
-				function getTickFormat() {
-					if (selectedCategory == "percent") {
-						return d3.format(".0%")
-					} else {
-						return d3.format(".2s")
-					}
-				}
+
 				chart = this,
 				domEle = config.element,
 				stackKey = config.key,
 				data = config.data,
 				xScale = d3.scaleLinear().rangeRound([0, width]),
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
-				color = d3.scaleOrdinal(["#ec008b","#fdbf11","#1696d2"]),
-				xAxis = d3.axisBottom(xScale).tickFormat(getTickFormat()),
+				xAxis_normal = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height)
+				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
+				var xAxis = (IS_MOBILE) ? xAxis_mobile : xAxis_normal;				
 				yAxis =  d3.axisLeft(yScale)
 
 				var stack = d3.stack()
@@ -290,12 +322,13 @@ console.log('hello')
 
 				var layer = svg.selectAll(".layer")
 				 	.data(layers)
-				 	.style("fill", function(d, i) { return color(i); });
+				 	.style("fill", function(d, i) { return COLORS[i]; });
 
 				layer.selectAll("rect")
 				  	.data(function(d) {console.log(d); return d; })
 				   	.attr("y", function(d) {return yScale(d.data.year); })
 				   	.attr("x", function(d) { return xScale(d[0]); })
+				  	.attr("class", function(d) {return "year" + d.data.year})
 				   	.transition()
 	            	.duration(700)
 	            	.ease(d3.easeLinear)
@@ -306,8 +339,10 @@ console.log('hello')
 				 	.transition().duration(1500)
 				 	.ease(d3.easeSinInOut)
 				 	.call(xAxis);
+				d3.selectAll("rect.year2015")
+		  			.classed("selected", true)
 
-
+		  		showStats("year2015")
 
 			}
 		}
