@@ -14,14 +14,13 @@ function drawGraph(container_width){
 	       		if (category == "percent") {
 	       			return d3.format(",.2%")
 	       		} else { 
-	       			if (IS_MOBILE) {
+	       			if (container_width < 500) {
 	       				return d3.format("$,.2s")
 	       			}
 	       			return d3.format("$,.0f")
 	       		}
 	       	} 
 	       	var statFormat = statFormatter();
-	       	console.log(statFormat)
 	       	var year = d3.selectAll("." + yearClass).data()[0].data["year"]
 	       	var missionStat = d3.selectAll("." + yearClass).data()[0].data["mission_" + category]
 	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
@@ -57,7 +56,7 @@ function drawGraph(container_width){
 	        };
 	    }
 	var aspect_width = 25,
-		aspect_height = (IS_PHONE) ? 30 : 23,
+		aspect_height = (container_width < 400) ? 40 : 25,
 		margin = {top: 20, right: 30, bottom: 50, left: 40},
 		width = container_width - margin.left - margin.right,
 		height = Math.ceil((width * aspect_height) / aspect_width) - margin.top - margin.bottom;
@@ -87,20 +86,22 @@ function drawGraph(container_width){
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
 				xAxis_normal = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height)
 				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
-				var xAxis = (IS_MOBILE) ? xAxis_mobile : xAxis_normal;
+				var xAxis = (container_width < 400) ? xAxis_mobile : xAxis_normal;
 
 				yAxis =  d3.axisLeft(yScale)
-				$("#" + domEle).empty()
+				$("#header").empty()
 				svgHeader = d3.select("#header").append("svg")
 							.attr("width", width + margin.left + margin.right)
 							.attr("height", width/8)
 							.append("g")
-							.attr("transform", "translate(0," + width*.05+ ")");
+							.attr("transform", "translate(0," + width*.06+ ")");
 
 
 				svgHeader.append("text")
 					.attr("class", "header")
 				getHeader();
+				
+				$("#stacked-bar").empty()
 				svg = d3.select("#"+domEle).append("svg")
 						.attr("width", width + margin.left + margin.right)
 						.attr("height", height + margin.top + margin.bottom)
@@ -116,10 +117,10 @@ function drawGraph(container_width){
 					        statsSvg.append("text")
 					          .attr("class", "stats-header")
 					          .attr("x", function() {
-					            // if (IS_MOBILE && !IS_PHONE) {
-					            //     return (.068*width)*i;
-					            //   }
-					                  return (.2*width)*i;
+					            if (container_width < 400) {
+					                return (.23*width)*i;
+					             }
+					                return (.2*width)*i;
 					          })
 					          .attr("y", width*.04)
 					          .text(function(){
@@ -139,20 +140,15 @@ function drawGraph(container_width){
 					          .attr("class", function() {
 					            return "stats-text " + "text" + i})
 					          .attr("x", function() {
-					            // if (IS_MOBILE && !IS_PHONE) {
-					            //     return (.068*width)*i;
-					            //   }
-					            // if (IS_PHONE) {  
-					            //     return (.082*width)*i; 
-					            // }
-					                  return (.2*width)*i;
+					            if (container_width < 400) {
+					                return (.23*width)*i;
+					             }
+					                return (.2*width)*i;
 					          })
 					          .attr("y", function() {
-					          	if (IS_PHONE) {
-					          		return height*.13
-					          	} else {
-					          		return height *.1
-					          	}
+					          	if (container_width < 400){
+					          		return height*.1
+					          	} return height *.085
 					          })
 					          .attr("transform", function(d) { 
 					            // if (IS_PHONE) {
@@ -198,7 +194,7 @@ function drawGraph(container_width){
 					.style("fill", function(d, i) { return COLORS[i]; });
 
 				layer.selectAll("rect")
-				  	.data(function(d) {console.log(d); return d; })
+				  	.data(function(d) {return d; })
 				  	.enter().append("rect")
 				  	.attr("y", function(d) {return yScale(d.data.year); })
 				  	.attr("x", function(d) { return xScale(d[0]); })
@@ -250,7 +246,6 @@ function drawGraph(container_width){
 			return selectedCategory
 		}
 		var category = categoryFunction();
-		console.log(category)
 		var key = ["mission_" + category , "private_" + category, "mainstream_" + category];
 		// var key = ["mission_percent","private_percent","mainstream_percent"];
 		// var key2 = ["mission_dollar","private_dollar","mainstream_dollar"];
@@ -314,7 +309,7 @@ function drawGraph(container_width){
 		var initStackedBarChartUpdate = {
 			draw: function(config) {
 
-
+				console.log('update')
 				chart = this,
 				domEle = config.element,
 				stackKey = config.key,
@@ -323,7 +318,7 @@ function drawGraph(container_width){
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
 				xAxis_normal = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height)
 				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
-				var xAxis = (IS_MOBILE) ? xAxis_mobile : xAxis_normal;				
+				var xAxis = (container_width < 400) ? xAxis_mobile : xAxis_normal;				
 				yAxis =  d3.axisLeft(yScale)
 
 				getHeader();
@@ -334,7 +329,7 @@ function drawGraph(container_width){
 				var layers= stack(data);
 					data.sort(function(a, b) { return b.year - a.year; });
 					yScale.domain(data.map(function(d) {return d.year; }));
-					xScale.domain([0,d3.max(data, function(d) {console.log(d["total_" + category]); return d["total_" + category]})]);
+					xScale.domain([0,d3.max(data, function(d) { return d["total_" + category]})]);
 
 
 				var layer = svg.selectAll(".layer")
@@ -342,7 +337,7 @@ function drawGraph(container_width){
 				 	.style("fill", function(d, i) { return COLORS[i]; });
 
 				layer.selectAll("rect")
-				  	.data(function(d) {console.log(d); return d; })
+				  	.data(function(d) {return d; })
 				   	.attr("y", function(d) {return yScale(d.data.year); })
 				   	.attr("x", function(d) { return xScale(d[0]); })
 				  	.attr("class", function(d) {return "year" + d.data.year})

@@ -102,7 +102,6 @@ text.selected {
 }
 
 .header {
-
   font-family: "Lato", sans-serif;
   font-size: 24px;
 }
@@ -124,22 +123,29 @@ text.selected {
     .stats-text {
       font-size: 14px;
     }
-    .header {
-      font-size: 18px;
-    }
 }
 
 @media (max-width: 450px) {
     #isPhone {
       display: block;
     }
+    .header {
+      font-size: 18px;
+    }
     .stats-header {
-      font-size: 12px;
+      font-size: 11px;
     }
     .stats-text {
       font-size: 12px;
     }
     .axis text {
       font-size: 11px;
+    }
+}
+
+@media (max-width: 400px) {
+
+    .header {
+      font-size: 16px;
     }
 }
