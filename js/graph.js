@@ -177,45 +177,47 @@ function drawGraph(container_width){
 				
 				var dropdown = d3.select("#dropdown-menu")
 		              .selectAll("option")
-		              .data(data.sort(function(a, b) { return b.year - a.year; }))
+		              .data(data.sort(function(a, b) { return a.year - b.year; }))
 		              .enter()
 		              .append("option")
 		              .attr("value", function(d){return d.year;})
 		              .text(function(d){return d.year;})
-$("#dropdown-menu")
-			.selectmenu({
-			   open: function( event, ui ) {
-			      // d3.select("body").style("height", (d3.select(".ui-selectmenu-menu.ui-front.ui-selectmenu-open").node().getBoundingClientRect().height*1.3) + "px")
-			      // pymChild.sendHeight();
-			    },
-			    close: function(event, ui){
-			      // d3.select("body").style("height", null)
-			      // pymChild.sendHeight();
-			    },
-			   change: function(event, d){
-			  //       var value = this.value
-			  //       var selectedIndex = this.selectedIndex
-			  //       var selectedData = (data[selectedIndex])
-			  //       var name = (data[selectedIndex]["CZ"])
-			  //       var idClass = "id_" + value
-					// d3.selectAll('circle')
-					// 	.classed("selected", false)
-					// 	.classed("deselected", true)
-			  //     	d3.select("circle." + idClass)
-			  //     		.classed("selected", true)
-			  //     		.classed("deselected", false)
-			  //     		.moveToFront()
-			  //     	var firstLineY = -.18
-			  //     	var secondLineY = -.15
-			  //       highlightPlace(idClass, "menu")
-				 //  	barText(selectedData, idClass, firstLineY, secondLineY)
-				 //  	d3.selectAll(".text-rect")
-			  //   		.remove();
-			    }
-			})     
-					        
-			.selectmenu( "menuWidget" )
-			.addClass( "ui-menu-icons customicons" );
+		        $('select option[value="2015"]').attr("selected",true);
+
+				$("#dropdown-menu")
+				.selectmenu({
+				   open: function( event, ui ) {
+				      // d3.select("body").style("height", (d3.select(".ui-selectmenu-menu.ui-front.ui-selectmenu-open").node().getBoundingClientRect().height*1.3) + "px")
+				      // pymChild.sendHeight();
+				    },
+				    close: function(event, ui){
+				      // d3.select("body").style("height", null)
+				      // pymChild.sendHeight();
+				    },
+				   change: function(event, d){
+				        var value = this.value
+				        var yearClass = "year" + value
+				        console.log(value)
+				        showStats(yearClass)
+				        // var selectedIndex = this.selectedIndex
+				        // var selectedData = (data[selectedIndex])
+				        // console.log(value)
+				        d3.selectAll("rect").classed("selected", false)
+				        d3.selectAll(".year" + value).classed("selected", true)
+				  //       var name = (data[selectedIndex]["CZ"])
+				  //       var idClass = "id_" + value
+
+				  //     	var firstLineY = -.18
+				  //     	var secondLineY = -.15
+				  //       highlightPlace(idClass, "menu")
+					 //  	barText(selectedData, idClass, firstLineY, secondLineY)
+					 //  	d3.selectAll(".text-rect")
+				  //   		.remove();
+				    }
+				})     
+						        
+				.selectmenu( "menuWidget" )
+				.addClass( "ui-menu-icons customicons" );
 
 				var stack = d3.stack()
 					.keys(stackKey)
