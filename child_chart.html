@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <link rel="stylesheet" href="css/style.css" type="text/css">
+<link rel="stylesheet" href="css/vendor/jquery-ui.css">
+
 <body>
   <div id = "isMobile"></div>
   <div id = "isPhone"></div>
@@ -12,9 +14,16 @@
 		<div id="dollar_button" class="toggle_button"><span>Dollars</span></div>
 	</div>
 </div>
-<div id="stats-div"></div>
+<div id="dropdown-div">
+	<select id = "dropdown-menu" name = "dropdown-menu">
+	</select>
+</div>
+<div id="stats-div">
+</div>
+
 <div id='stacked-bar'></div>
 <script type="text/javascript" src="js/vendor/pym.min.js"></script>
 <script src="js/vendor/jquery-2.2.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 <script src="https://d3js.org/d3.v4.min.js"></script>
 <script src="js/graph.js"></script>

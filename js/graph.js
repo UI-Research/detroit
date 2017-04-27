@@ -1,6 +1,5 @@
-var HEADERS =  ["YEAR", "MISSION", "PRIVATE", "MAINSTREAM"],
+var HEADERS =  ["MISSION", "PRIVATE", "MAINSTREAM"],
     COLORS = ["#000000","#fdbf11","#1696d2"];
-    HEADER_COLORS = ["#9d9d9d", "#000000","#fdbf11","#1696d2"];
 var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
 var IS_PHONE = d3.select("#isPhone").style("display") == "block"
 		
@@ -26,13 +25,12 @@ function drawGraph(container_width){
 	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
 	       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
 	       	var yearLabel = d3.selectAll(".year-label-" + yearClass).attr('class')
+
 	       	d3.select(".text0")
-	       		.html(year)
-	       	d3.select(".text1")
 	       		.html(statFormat(missionStat))
-	       	d3.select(".text2")
+	       	d3.select(".text1")
 	       		.html(statFormat(privateStat))
-	       	d3.select(".text3")
+	       	d3.select(".text2")
 	       		.html(statFormat(mainstreamStat))
 		  	d3.selectAll("text")
 				.classed("selected", false)
@@ -108,12 +106,32 @@ function drawGraph(container_width){
 						.append("g")
 						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 				$("#stats-div").empty()
+				var statsDivWidth = (container_width < 400) ? width : width*.8 
 				var statsSvg = d3.select("#stats-div")
 					.append("svg")
-					.attr("width", width + margin.left)
+					.attr("width", statsDivWidth)
 					.attr("height", height/12 + margin.top)
-					 for (i=0; i<=4; i++){
-				      	if(i !== 4){
+					 for (i=0; i<=3; i++){
+				      	if(i !== 3){
+				      		statsSvg.append("rect")
+				      		.attr("width", width*.022)
+				      		.attr("height", width*.022)
+							.attr("x", function() {
+					            if (container_width < 400) {
+					                return (.23*width)*i;
+					             }
+					                return (.2*width)*i;
+					          })
+					          .attr("y", width*.019)
+					          .style("fill", function(){
+					              return (COLORS[i])
+					          })
+					          .attr("transform", function(d) { 
+					            if (container_width < 400) {
+					              return "translate("+width*.01+",0)";
+					            }
+					            	return "translate("+ width*.06 +", 0)"; 
+					          })
 					        statsSvg.append("text")
 					          .attr("class", "stats-header")
 					          .attr("x", function() {
@@ -126,14 +144,11 @@ function drawGraph(container_width){
 					          .text(function(){
 					              return (HEADERS[i])
 					          })
-					          .style("fill", function(){
-					              return (HEADER_COLORS[i])
-					          })
 					          .attr("transform", function(d) { 
-					            // if (IS_PHONE) {
-					            //   return "translate(" + width/14 + ", "+ height/2 +")";
-					            // }
-					            	return "translate("+ width*.15 +", 0)"; 
+					            if (container_width < 400) {
+					              return "translate("+width*.04+",0)";
+					            }
+					            	return "translate("+ width*.09 +", 0)"; 
 					          })
 
 					  		statsSvg.append("text")
@@ -151,22 +166,64 @@ function drawGraph(container_width){
 					          	} return height *.085
 					          })
 					          .attr("transform", function(d) { 
-					            // if (IS_PHONE) {
-					            //   return "translate(" + width/14 + ", "+ height/2 +")";
-					            // }
-					            	return "translate("+ width*.15 +", 0)"; 
+					            if (container_width < 400) {
+					              return "translate("+width*.01+",0)";
+					            }
+					            	return "translate("+ width*.09 +", 0)"; 
 					          })
 				      	}
 				  	}
 
+				
+				var dropdown = d3.select("#dropdown-menu")
+		              .selectAll("option")
+		              .data(data.sort(function(a, b) { return b.year - a.year; }))
+		              .enter()
+		              .append("option")
+		              .attr("value", function(d){return d.year;})
+		              .text(function(d){return d.year;})
+$("#dropdown-menu")
+			.selectmenu({
+			   open: function( event, ui ) {
+			      // d3.select("body").style("height", (d3.select(".ui-selectmenu-menu.ui-front.ui-selectmenu-open").node().getBoundingClientRect().height*1.3) + "px")
+			      // pymChild.sendHeight();
+			    },
+			    close: function(event, ui){
+			      // d3.select("body").style("height", null)
+			      // pymChild.sendHeight();
+			    },
+			   change: function(event, d){
+			  //       var value = this.value
+			  //       var selectedIndex = this.selectedIndex
+			  //       var selectedData = (data[selectedIndex])
+			  //       var name = (data[selectedIndex]["CZ"])
+			  //       var idClass = "id_" + value
+					// d3.selectAll('circle')
+					// 	.classed("selected", false)
+					// 	.classed("deselected", true)
+			  //     	d3.select("circle." + idClass)
+			  //     		.classed("selected", true)
+			  //     		.classed("deselected", false)
+			  //     		.moveToFront()
+			  //     	var firstLineY = -.18
+			  //     	var secondLineY = -.15
+			  //       highlightPlace(idClass, "menu")
+				 //  	barText(selectedData, idClass, firstLineY, secondLineY)
+				 //  	d3.selectAll(".text-rect")
+			  //   		.remove();
+			    }
+			})     
+					        
+			.selectmenu( "menuWidget" )
+			.addClass( "ui-menu-icons customicons" );
 
 				var stack = d3.stack()
 					.keys(stackKey)
 					/*.order(d3.stackOrder)*/
 					.offset(d3.stackOffsetNone);
 				var layers= stack(data);
-					data.sort(function(a, b) { return b.year - a.year; });
-					yScale.domain(data.map(function(d) {return d.year; }));
+					data.sort(function(a, b) { return a.year - b.year; });
+					yScale.domain(data.map(function(d) {console.log(d.year); return d.year; }));
 					xScale.domain([0,d3.max(data, function(d) {return d["total_" + category]})]);
 				svg.append("g")
 					.attr("class", "axis axis--x")
