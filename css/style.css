@@ -15,16 +15,25 @@ body, html {
 }
 
 rect {
-  opacity: .7;
+  opacity: .65;
 }
 
 rect.selected {
   opacity: .9;
 }
 
+rect.hovered {
+  opacity: .9;
+}
+
 text.selected {
   font-weight:  bold;
 }
+
+text.hovered {
+  font-weight:  bold;
+}
+
 .toggle_button{
     margin-bottom: 30px;
     padding: 5 10 5 10px;

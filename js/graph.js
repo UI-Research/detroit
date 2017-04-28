@@ -8,6 +8,8 @@ function drawGraph(container_width){
 
 
 	var showStats = function(yearClass) {
+			d3.selectAll(".stats-text")
+				.html("")
 	       	var category = d3.select(".toggle_button.active").attr("id").split("_")[0]
 	       	var statFormatter = function() {
 	       		if (category == "percent") {
@@ -20,7 +22,16 @@ function drawGraph(container_width){
 	       		}
 	       	} 
 	       	var statFormat = statFormatter();
-	       	var year = d3.selectAll("." + yearClass).data()[0].data["year"]
+	       	var year = yearClass.slice(-4)
+	       	console.log(year)
+	       	d3.select("#dropdown-menu")
+		    	.selectAll("option")
+		    	.attr("selected",false)
+		    	
+
+	       	$('select option[value=' + year + ']').attr("selected",true);
+	       	$(".ui-selectmenu-text").text(year)
+
 	       	var missionStat = d3.selectAll("." + yearClass).data()[0].data["mission_" + category]
 	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
 	       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
@@ -33,12 +44,10 @@ function drawGraph(container_width){
 	       	d3.select(".text2")
 	       		.html(statFormat(mainstreamStat))
 		  	d3.selectAll("text")
-				.classed("selected", false)
-	       	d3.select("." + yearLabel)
-	       		.classed("selected", true)
-	       		
+				.classed("hovered", false)
+	       	d3.selectAll("." + yearLabel)
+	       		.classed("hovered", true)
 
-	 
 	}
 
 	  if (container_width == undefined || isNaN(container_width)) {
@@ -198,10 +207,12 @@ function drawGraph(container_width){
 				        var value = this.value
 				        var yearClass = "year" + value
 				        console.log(value)
+				        d3.selectAll("text")
+				        	.classed("selected", false)
+				       	d3.selectAll("year-label-year-" + yearClass)
+				       		.classed("selected", true)
 				        showStats(yearClass)
-				        // var selectedIndex = this.selectedIndex
-				        // var selectedData = (data[selectedIndex])
-				        // console.log(value)
+
 				        d3.selectAll("rect").classed("selected", false)
 				        d3.selectAll(".year" + value).classed("selected", true)
 				  //       var name = (data[selectedIndex]["CZ"])
@@ -225,7 +236,7 @@ function drawGraph(container_width){
 					.offset(d3.stackOffsetNone);
 				var layers= stack(data);
 					data.sort(function(a, b) { return a.year - b.year; });
-					yScale.domain(data.map(function(d) {console.log(d.year); return d.year; }));
+					yScale.domain(data.map(function(d) { return d.year; }));
 					xScale.domain([0,d3.max(data, function(d) {return d["total_" + category]})]);
 				svg.append("g")
 					.attr("class", "axis axis--x")
@@ -264,24 +275,40 @@ function drawGraph(container_width){
 				  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) })
 				d3.selectAll("rect.year2015")
 		  			.classed("selected", true)
-
+				d3.selectAll(".year-label-year2015")
+		  			.classed("selected", true)
 				 d3.selectAll('rect')
 				  	.on("mouseover", function() {
-				  		d3.selectAll(".stats-text")
-				  			.html("")
-					  	 d3.selectAll("rect")
-					  		.classed("selected", false)
-					var yearClass = d3.select(this).attr("class")
-		       			console.log(yearClass)
-				  		showStats(yearClass);
-				  d3.selectAll("." + yearClass)
-				  	.classed("selected", true)
+				  		var yearClass = d3.select(this).attr("class").split(' ')[0]
+				  			showStats(yearClass)
+				  			d3.selectAll("." + yearClass)
+				  				.classed("hovered", true)
+		 console.log(d3.selectAll(".selected").nodes().length)
+				  	
 				  	})
 				  	.on("mouseout", function() {
-
-
-
+				  		var selectedElement = d3.selectAll("rect.selected").filter(function (d, i) { return i === 1;}).attr("class")
+				  		console.log(selectedElement)
+				  		var selectedClass = selectedElement.split(" ")[0]
+				  		showStats(selectedClass)
+				  		d3.selectAll(".hovered").classed("hovered", false)
 				  	})
+		         	.on("click", function(){
+		         		d3.selectAll("rect").classed("selected", false)
+		         		var newYear = d3.select(this).attr('class').split(' ')[0]
+		         		console.log(newYear)
+		         		d3.selectAll("." + newYear)
+		         			.classed("hovered", false)
+		         			.classed("selected", true)
+		         		d3.selectAll("text")
+		         			.classed("selected", false)
+						d3.selectAll(".year-label-" + newYear)
+					        .classed("hovered", false)
+		  					.classed("selected", true)
+
+
+		         	})
+
 
 
 
