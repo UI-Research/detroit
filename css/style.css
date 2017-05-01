@@ -19,11 +19,24 @@ rect {
 }
 
 rect.selected {
-  opacity: .9;
+  opacity: 1;
+  stroke: #000000;
+  stroke-width: 1px;
+}
+
+rect.mousedOut {
+  opacity: .65 !important;
+  stroke: none !important;
+}
+
+text.mousedOut {
+  font-weight: normal !important;
 }
 
 rect.hovered {
-  opacity: .9;
+  opacity: 1;
+  stroke: #000000;
+  stroke-width: 1px;
 }
 
 text.selected {

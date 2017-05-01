@@ -1,8 +1,8 @@
 var HEADERS =  ["MISSION", "PRIVATE", "MAINSTREAM"],
-    COLORS = ["#000000","#fdbf11","#1696d2"];
+    COLORS = ["#d2d2d2","#fdbf11","#1696d2"];
 var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
 var IS_PHONE = d3.select("#isPhone").style("display") == "block"
-		
+var yearClass= "year2015"		
 
 function drawGraph(container_width){
 
@@ -304,20 +304,42 @@ function drawGraph(container_width){
 	            	.ease(d3.easeLinear)
 				  	.attr("height", yScale.bandwidth())
 				  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) })
-				d3.selectAll("rect.year2015")
-		  			.classed("selected", true)
-				d3.selectAll(".year-label-year2015")
-		  			.classed("selected", true)
+
 				 d3.selectAll('rect')
-				  	.on("mouseover", function() {
+				  	.on("mouseover", function() { 
 				  		var yearClass = d3.select(this).attr("class").split(' ')[0]
 				  			showStats(yearClass)
+				  		// IF THE HOVERED BAR IS THE SELECTED BAR:
+				  		if (yearClass == d3.selectAll("rect.selected").attr("class").split( )[0]) {
+				  			console.log(yearClass)
+				  			console.log(d3.selectAll("rect.selected").attr("class").split(" ")[0])
+				  			d3.selectAll("." + yearClass)
+				  				.classed("hovered", false)
+				  		}	else { 				 
+				  			console.log(yearClass)
+				  			console.log(d3.selectAll("rect.selected").attr("class").split(" ")[0])
 				  			d3.selectAll("." + yearClass)
 				  				.classed("hovered", true)
-		 console.log(d3.selectAll(".selected").nodes().length)
+				  		}
+
+		 				if ((d3.selectAll("rect.hovered").nodes().length) > 0) {
+		 					console.log('hi')
+				  			d3.selectAll("rect.selected, text.selected")
+				  				.classed("mousedOut", true)
+				  		} else {
+				  			console.log('bye')
+				  			d3.selectAll("rect.selected, text.selected")
+				  				.classed("mousedOut", false)
+
+				  		}
 				  	
 				  	})
 				  	.on("mouseout", function() {
+
+				  		d3.selectAll("rect.selected")
+				  			.classed("mousedOut", false)
+						d3.selectAll("text.selected")
+				  			.classed("mousedOut", false)
 				  		var selectedElement = d3.selectAll("rect.selected").filter(function (d, i) { return i === 1;}).attr("class")
 				  		console.log(selectedElement)
 				  		var selectedClass = selectedElement.split(" ")[0]
@@ -325,7 +347,9 @@ function drawGraph(container_width){
 				  		d3.selectAll(".hovered").classed("hovered", false)
 				  	})
 		         	.on("click", function(){
-		         		d3.selectAll("rect").classed("selected", false)
+		         		d3.selectAll("rect")
+		         			.classed("mousedOut", false)
+		         			.classed("selected", false)
 		         		var newYear = d3.select(this).attr('class').split(' ')[0]
 		         		console.log(newYear)
 		         		d3.selectAll("." + newYear)
@@ -353,7 +377,11 @@ function drawGraph(container_width){
 
 		        	})
 
-		        showStats("year2015")
+		        showStats(yearClass)
+		        d3.selectAll("rect." + yearClass)
+		  			.classed("selected", true)
+				d3.selectAll(".year-label-" + yearClass)
+		  			.classed("selected", true)
 			}
 		}
 
