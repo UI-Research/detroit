@@ -95,7 +95,9 @@ text.hovered {
 .axis--y path {
   opacity: 0;
 }
-
+#year-div {
+  float: left;
+}
 .stats-header {
   font-size: 14px;
 }

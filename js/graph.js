@@ -24,19 +24,16 @@ function drawGraph(container_width){
 	       	var statFormat = statFormatter();
 	       	var year = yearClass.slice(-4)
 	       	console.log(year)
-	       	d3.select("#dropdown-menu")
-		    	.selectAll("option")
-		    	.attr("selected",false)
+	       	
 		    	
-
-	       	$('select option[value=' + year + ']').attr("selected",true);
-	       	$(".ui-selectmenu-text").text(year)
-
+	       	var yearStat = d3.selectAll("." + yearClass).data()[0].data["year"]
 	       	var missionStat = d3.selectAll("." + yearClass).data()[0].data["mission_" + category]
 	       	var privateStat = d3.selectAll("." + yearClass).data()[0].data["private_" + category]
 	       	var mainstreamStat = d3.selectAll("." + yearClass).data()[0].data["mainstream_" + category]
 	       	var yearLabel = d3.selectAll(".year-label-" + yearClass).attr('class')
 
+	       	d3.select(".year-text")
+	       		.html(yearStat)
 	       	d3.select(".text0")
 	       		.html(statFormat(missionStat))
 	       	d3.select(".text1")
@@ -47,6 +44,8 @@ function drawGraph(container_width){
 				.classed("hovered", false)
 	       	d3.selectAll("." + yearLabel)
 	       		.classed("hovered", true)
+ 		
+
 
 	}
 
@@ -114,8 +113,48 @@ function drawGraph(container_width){
 						.attr("height", height + margin.top + margin.bottom)
 						.append("g")
 						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				$("#year-div").empty()
 				$("#stats-div").empty()
-				var statsDivWidth = (container_width < 400) ? width : width*.8 
+				var statsDivWidth = (container_width < 400) ? width*.9: width*.8
+				var yearDivWidth = width*.2 
+
+				var yearSvg = d3.select("#year-div")
+					.append("svg")
+					.attr("width", yearDivWidth)
+					.attr("height", height/12 + margin.top)
+				yearSvg.append("text")
+  					.attr("class", "stats-header")
+			          .attr("x", function() {
+			            if (container_width < 400) {
+			                return (.02*width);
+			             }
+			                return (.1*width);
+			          })
+			          .attr("y", width*.04)
+			          .text(function(){
+			              return ("YEAR")
+			          })
+			    yearSvg.append("text")
+			          .attr("class", function() {
+			            return "stats-text " + "year-text"})
+			          .attr("x", function() {
+			            if (container_width < 400) {
+			                return (.01*width);
+			             }
+			                return (.09*width);
+			          })
+			          .attr("y", function() {
+			          	if (container_width < 400){
+			          		return height*.08
+			          	} return height *.085
+			          })
+			          .attr("transform", function(d) { 
+			            if (container_width < 400) {
+			              return "translate("+width*.01+",0)";
+			            }
+			            	return "translate("+ width*.01 +", 0)"; 
+			          })
+
 				var statsSvg = d3.select("#stats-div")
 					.append("svg")
 					.attr("width", statsDivWidth)
@@ -127,7 +166,7 @@ function drawGraph(container_width){
 				      		.attr("height", width*.022)
 							.attr("x", function() {
 					            if (container_width < 400) {
-					                return (.23*width)*i;
+					                return (.25*width)*i;
 					             }
 					                return (.2*width)*i;
 					          })
@@ -136,16 +175,16 @@ function drawGraph(container_width){
 					              return (COLORS[i])
 					          })
 					          .attr("transform", function(d) { 
-					            if (container_width < 400) {
-					              return "translate("+width*.01+",0)";
-					            }
+					          	 if (container_width < 400) {
+					          	 	return "translate("+ width*.02 +", 0)"
+					          	 }
 					            	return "translate("+ width*.06 +", 0)"; 
 					          })
 					        statsSvg.append("text")
 					          .attr("class", "stats-header")
 					          .attr("x", function() {
 					            if (container_width < 400) {
-					                return (.23*width)*i;
+					                return (.25*width)*i;
 					             }
 					                return (.2*width)*i;
 					          })
@@ -154,9 +193,9 @@ function drawGraph(container_width){
 					              return (HEADERS[i])
 					          })
 					          .attr("transform", function(d) { 
-					            if (container_width < 400) {
-					              return "translate("+width*.04+",0)";
-					            }
+					          	 if (container_width < 400) {
+					          	 	return "translate("+ width*.055 +", 0)"
+					          	 }
 					            	return "translate("+ width*.09 +", 0)"; 
 					          })
 
@@ -165,18 +204,18 @@ function drawGraph(container_width){
 					            return "stats-text " + "text" + i})
 					          .attr("x", function() {
 					            if (container_width < 400) {
-					                return (.23*width)*i;
+					                return (.25*width)*i;
 					             }
 					                return (.2*width)*i;
 					          })
 					          .attr("y", function() {
 					          	if (container_width < 400){
-					          		return height*.1
+					          		return height*.08
 					          	} return height *.085
 					          })
 					          .attr("transform", function(d) { 
 					            if (container_width < 400) {
-					              return "translate("+width*.01+",0)";
+					              return "translate("+width*.06+",0)";
 					            }
 					            	return "translate("+ width*.09 +", 0)"; 
 					          })
@@ -184,51 +223,43 @@ function drawGraph(container_width){
 				  	}
 
 				
-				var dropdown = d3.select("#dropdown-menu")
-		              .selectAll("option")
-		              .data(data.sort(function(a, b) { return a.year - b.year; }))
-		              .enter()
-		              .append("option")
-		              .attr("value", function(d){return d.year;})
-		              .text(function(d){return d.year;})
-		        $('select option[value="2015"]').attr("selected",true);
 
-				$("#dropdown-menu")
-				.selectmenu({
-				   open: function( event, ui ) {
-				      // d3.select("body").style("height", (d3.select(".ui-selectmenu-menu.ui-front.ui-selectmenu-open").node().getBoundingClientRect().height*1.3) + "px")
-				      // pymChild.sendHeight();
-				    },
-				    close: function(event, ui){
-				      // d3.select("body").style("height", null)
-				      // pymChild.sendHeight();
-				    },
-				   change: function(event, d){
-				        var value = this.value
-				        var yearClass = "year" + value
-				        console.log(value)
-				        d3.selectAll("text")
-				        	.classed("selected", false)
-				       	d3.selectAll("year-label-year-" + yearClass)
-				       		.classed("selected", true)
-				        showStats(yearClass)
 
-				        d3.selectAll("rect").classed("selected", false)
-				        d3.selectAll(".year" + value).classed("selected", true)
-				  //       var name = (data[selectedIndex]["CZ"])
-				  //       var idClass = "id_" + value
+				// $("#dropdown-menu")
+				// .selectmenu({
+				//    open: function( event, ui ) {
+				//       // d3.select("body").style("height", (d3.select(".ui-selectmenu-menu.ui-front.ui-selectmenu-open").node().getBoundingClientRect().height*1.3) + "px")
+				//       // pymChild.sendHeight();
+				//     },
+				//     close: function(event, ui){
+				//       // d3.select("body").style("height", null)
+				//       // pymChild.sendHeight();
+				//     },
+				//    change: function(event, d){
+				//         var value = this.value
+				//         var yearClass = "year" + value
+				//         console.log(value)
+				//         d3.selectAll("text")
+				//         	.classed("selected", false)
+				//        	d3.selectAll(".year-label-" + yearClass)
+				//        		.classed("selected", true)
+				//        		console.log(yearClass)
+				//         showStats(yearClass)
 
-				  //     	var firstLineY = -.18
-				  //     	var secondLineY = -.15
-				  //       highlightPlace(idClass, "menu")
-					 //  	barText(selectedData, idClass, firstLineY, secondLineY)
-					 //  	d3.selectAll(".text-rect")
-				  //   		.remove();
-				    }
-				})     
-						        
-				.selectmenu( "menuWidget" )
-				.addClass( "ui-menu-icons customicons" );
+				//         d3.selectAll("rect").classed("selected", false)
+				//         d3.selectAll(".year" + value).classed("selected", true)
+				//   //       var name = (data[selectedIndex]["CZ"])
+				//   //       var idClass = "id_" + value
+
+				//   //     	var firstLineY = -.18
+				//   //     	var secondLineY = -.15
+				//   //       highlightPlace(idClass, "menu")
+				// 	 //  	barText(selectedData, idClass, firstLineY, secondLineY)
+				// 	 //  	d3.selectAll(".text-rect")
+				//   //   		.remove();
+				//     }
+				// })     
+
 
 				var stack = d3.stack()
 					.keys(stackKey)
@@ -413,7 +444,7 @@ function drawGraph(container_width){
 					.keys(stackKey)
 					.offset(d3.stackOffsetNone);
 				var layers= stack(data);
-					data.sort(function(a, b) { return b.year - a.year; });
+					data.sort(function(a, b) { return a.year - b.year; });
 					yScale.domain(data.map(function(d) {return d.year; }));
 					xScale.domain([0,d3.max(data, function(d) { return d["total_" + category]})]);
 
