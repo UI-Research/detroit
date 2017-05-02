@@ -266,9 +266,28 @@ function drawGraph(container_width){
 				  	.attr("height", yScale.bandwidth())
 				  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) })
 
-				 d3.selectAll('rect')
-				  	.on("mouseover", function() { 
-				  		var yearClass = d3.select(this).attr("class").split(' ')[0]
+				 d3.selectAll('.layer')
+					.on('mousemove', function () {
+					   var yPos = (d3.mouse(this)[1]); 
+
+					   	var totalHeight = d3.selectAll(".layer").node().getBoundingClientRect().height
+					   	var array = [1,2,3,4,5,6,7,8,9,10,11,12,13]
+					   	var breaks = array.map( function(item) { return (item/13) * totalHeight; } );
+						//var barHeight = totalHeight/totalBars
+					   //console.log(array)
+						var j;
+						for(j=0; (breaks[j]) < yPos; j++) {console.log(breaks[j] + " " + j)}
+						var bar = yScale.domain().reverse()[j]
+						var domain = yScale.domain().reverse()
+						// console.log(domain)
+						// console.log(totalHeight)
+						console.log(bar)
+
+						d3.selectAll(".year" + bar)
+			  				.classed("hovered", true)
+					//	console.log(d3.selectAll(".year" + bar).attr('class'))
+				  		var yearClass = d3.select(".year" + bar).attr('class').split(" ")[0]
+				  		console.log(yearClass)
 				  			showStats(yearClass)
 
 			  			// d3.selectAll("." + yearClass)
@@ -286,8 +305,29 @@ function drawGraph(container_width){
 				  				.classed("mousedOut", true)
 
 				  		}
+					})
+				  	.on("mouseover", function() { 
+				  	// 	var yearClass = d3.select(this).attr("class").split(' ')[0]
+				  	// 		showStats(yearClass)
+
+			  		// 	// d3.selectAll("." + yearClass)
+			  		// 	// 	.classed("hovered", true)
+				  	// 	// IF THE HOVERED BAR IS THE SELECTED BAR:
+				  	// 	var hoveredBar = d3.selectAll("rect.hovered").attr("class").split(" ")[0]
+				  	// 	var selectedBar = d3.selectAll("rect.selected").attr("class").split(" ")[0]
+				 		// if ((hoveredBar) == (selectedBar)) {
+				 		// 	//STAY HIGHLIGHTED
+				  	// 		d3.selectAll("rect.selected, text.selected")
+				  	// 			.classed("mousedOut", false)
+				  	// 	} else {
+				  	// 		//HIGHLIGHT HOVERED BAR AND DESELECT SELECTED BAR
+				  	// 		d3.selectAll("rect.selected, text.selected")
+				  	// 			.classed("mousedOut", true)
+
+				  	// 	}
 				  	
 				  	})
+
 				  	.on("mouseout", function() {
 
 				  		d3.selectAll("rect.selected")
@@ -313,25 +353,7 @@ function drawGraph(container_width){
 					        .classed("hovered", false)
 		  					.classed("selected", true)
 		         	})
-					.on('mousemove', function () {
-					   var yPos = (d3.mouse(this)[1]); 
 
-					   	var totalHeight = d3.selectAll(".layer").node().getBoundingClientRect().height
-					   	var array = [1,2,3,4,5,6,7,8,9,10,11,12,13]
-					   	var breaks = array.map( function(item) { return (item/13) * totalHeight; } );
-						//var barHeight = totalHeight/totalBars
-					   //console.log(array)
-						var j;
-						for(j=0; (breaks[j]) < yPos; j++) {console.log(breaks[j] + " " + j)}
-						var bar = yScale.domain().reverse()[j]
-						var domain = yScale.domain().reverse()
-						// console.log(domain)
-						// console.log(totalHeight)
-						console.log(bar)
-						d3.selectAll(".year" + bar)
-			  				.classed("hovered", true)
-        
-					});
 
 
 
