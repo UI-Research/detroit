@@ -44,8 +44,6 @@ function drawGraph(container_width){
 			//	.classed("selected", false)
 	       	d3.selectAll("." + yearLabel)
 	       		.classed(state, true)
-	       		console.log(state)
-console.log(yearLabel) 		
 
 
 	}
@@ -287,17 +285,21 @@ console.log(yearLabel)
 					   	var array = [1,2,3,4,5,6,7,8,9,10,11,12,13]
 					   	var breaks = array.map( function(item) { return (item/13) * totalHeight; } );
 						var j;
-						for(j=0; (breaks[j]) < yPos; j++) {console.log(breaks[j] + " " + j)}
+						for(j=0; (breaks[j]) < yPos; j++) {}
 						var bar = yScale.domain().reverse()[j]
 						d3.selectAll(".bar")
 			  				.classed(state, false)
-			  				console.log(".year" + bar)
 						d3.selectAll(".year" + bar)
-			  				.classed(state, true)
+							.classed(state, true)
+			  				// .classed(state, function() {
+			  				// 	if (d3.select(".bar.selected").attr('class').split(" ")[0] == "year" + bar) {
+			  				// 		return false
+			  				// 	} return true
+			  				// })
 						d3.selectAll(".year-label-year" + bar)
 			  				.classed(state, true)
 			  			//	console.log(d3.selectAll(".year-label-" + bar).attr('class'))
-
+			  			console.log(d3.select(".year" + bar).attr('class'))
 			  		}
 
 				 d3.selectAll('.wholeGraph')
@@ -305,9 +307,7 @@ console.log(yearLabel)
 							var yPos = (d3.mouse(this)[1]); 
 							var state = "hovered"
 							onHoverOrClick(yPos, state);
-							console.log(d3.selectAll("text.hovered").attr('class'))
 					  		var yearClass = d3.select(".bar.hovered").attr('class').split(" ")[0]
-					  		console.log(yearClass)
 					  		showStats(yearClass, state)
 
 					  		// IF THE HOVERED BAR IS THE SELECTED BAR:
@@ -315,12 +315,10 @@ console.log(yearLabel)
 					  		var selectedBar = d3.selectAll(".bar.selected").attr("class").split(" ")[0]
 
 					 		if ((hoveredBar) == (selectedBar)) {
-					 			console.log('false')
 					 			//STAY HIGHLIGHTED
 					  			d3.selectAll(".bar.selected, text.selected")
 					  				.classed("mousedOut", false)
 					  		} else {
-					  			console.log('true')
 					  			//HIGHLIGHT HOVERED BAR AND DESELECT SELECTED BAR
 					  			d3.selectAll(".bar.selected, text.selected")
 					  				.classed("mousedOut", true)
@@ -343,7 +341,6 @@ console.log(yearLabel)
 					  	})
 			         	.on("click", function(){
 			        		var yPos = (d3.mouse(this)[1]); 
-			        		console.log(yPos)
 							var state = "selected"
 			         		d3.selectAll("rect.bar")
 			         			.classed("mousedOut", false)
