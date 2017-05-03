@@ -27,7 +27,7 @@ rect {
 rect.selected {
   opacity: 1;
   stroke: #000000;
-  stroke-width: 1.8px;
+  stroke-width: 2px;
 }
 
 rect.mousedOut {
@@ -38,7 +38,7 @@ rect.mousedOut {
 rect.selected.hovered {
   opacity: 1;
   stroke: #000000;
-  stroke-width: 1.8px;
+  stroke-width: 2px;
 }
 
 text.mousedOut {
