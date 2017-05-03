@@ -255,7 +255,7 @@ function drawGraph(container_width){
 					.attr("class", "layer")
 					.style("fill", function(d, i) { return COLORS[i]; });
 
-				layer.selectAll("rect")
+				layer.selectAll("rect.bar")
 				  	.data(function(d) {return d; })
 				  	.enter().append("rect")
 				  	.attr("y", function(d) {return yScale(d.data.year); })
@@ -266,94 +266,76 @@ function drawGraph(container_width){
 				  	.attr("height", yScale.bandwidth())
 				  	.attr("width", function(d) {return xScale(d[1]) - xScale(d[0]) })
 
-				 d3.selectAll('.layer')
-					.on('mousemove', function () {
-					   var yPos = (d3.mouse(this)[1]); 
-
+				var onHover = function(yPos, state) {
 					   	var totalHeight = d3.selectAll(".layer").node().getBoundingClientRect().height
+					   	console.log(totalHeight)
 					   	var array = [1,2,3,4,5,6,7,8,9,10,11,12,13]
 					   	var breaks = array.map( function(item) { return (item/13) * totalHeight; } );
-						//var barHeight = totalHeight/totalBars
-					   //console.log(array)
 						var j;
 						for(j=0; (breaks[j]) < yPos; j++) {console.log(breaks[j] + " " + j)}
 						var bar = yScale.domain().reverse()[j]
-						var domain = yScale.domain().reverse()
-						// console.log(domain)
-						// console.log(totalHeight)
+						//var domain = yScale.domain().reverse()
 						console.log(bar)
 
 						d3.selectAll(".year" + bar)
-			  				.classed("hovered", true)
-					//	console.log(d3.selectAll(".year" + bar).attr('class'))
-				  		var yearClass = d3.select(".year" + bar).attr('class').split(" ")[0]
-				  		console.log(yearClass)
-				  			showStats(yearClass)
+			  				.classed(state, true)
+			  		}
 
-			  			// d3.selectAll("." + yearClass)
-			  			// 	.classed("hovered", true)
-				  		// IF THE HOVERED BAR IS THE SELECTED BAR:
-				  		var hoveredBar = d3.selectAll("rect.hovered").attr("class").split(" ")[0]
-				  		var selectedBar = d3.selectAll("rect.selected").attr("class").split(" ")[0]
-				 		if ((hoveredBar) == (selectedBar)) {
-				 			//STAY HIGHLIGHTED
-				  			d3.selectAll("rect.selected, text.selected")
-				  				.classed("mousedOut", false)
-				  		} else {
-				  			//HIGHLIGHT HOVERED BAR AND DESELECT SELECTED BAR
-				  			d3.selectAll("rect.selected, text.selected")
-				  				.classed("mousedOut", true)
+				 d3.selectAll('.layer').each(function(d) {
+				 	d3.select(this)
+						.on('mousemove', function () {
+							var yPos = (d3.mouse(this)[1]); 
+							var state = "hovered"
+							console.log(yPos)
+							onHover(yPos, state);
+						//	console.log(d3.selectAll(".year" + bar).attr('class'))
+					  		var yearClass = d3.select(".bar.hovered").attr('class').split(" ")[0]
 
-				  		}
-					})
-				  	.on("mouseover", function() { 
-				  	// 	var yearClass = d3.select(this).attr("class").split(' ')[0]
-				  	// 		showStats(yearClass)
+					  		console.log(yearClass)
+					  			showStats(yearClass)
 
-			  		// 	// d3.selectAll("." + yearClass)
-			  		// 	// 	.classed("hovered", true)
-				  	// 	// IF THE HOVERED BAR IS THE SELECTED BAR:
-				  	// 	var hoveredBar = d3.selectAll("rect.hovered").attr("class").split(" ")[0]
-				  	// 	var selectedBar = d3.selectAll("rect.selected").attr("class").split(" ")[0]
-				 		// if ((hoveredBar) == (selectedBar)) {
-				 		// 	//STAY HIGHLIGHTED
-				  	// 		d3.selectAll("rect.selected, text.selected")
-				  	// 			.classed("mousedOut", false)
-				  	// 	} else {
-				  	// 		//HIGHLIGHT HOVERED BAR AND DESELECT SELECTED BAR
-				  	// 		d3.selectAll("rect.selected, text.selected")
-				  	// 			.classed("mousedOut", true)
+				  			// d3.selectAll("." + yearClass)
+				  			// 	.classed("hovered", true)
+					  		// IF THE HOVERED BAR IS THE SELECTED BAR:
+					  		var hoveredBar = d3.selectAll("rect.hovered").attr("class").split(" ")[0]
+					  		var selectedBar = d3.selectAll("rect.selected").attr("class").split(" ")[0]
+					 		if ((hoveredBar) == (selectedBar)) {
+					 			//STAY HIGHLIGHTED
+					  			d3.selectAll("rect.selected, text.selected")
+					  				.classed("mousedOut", false)
+					  		} else {
+					  			//HIGHLIGHT HOVERED BAR AND DESELECT SELECTED BAR
+					  			d3.selectAll("rect.selected, text.selected")
+					  				.classed("mousedOut", true)
 
-				  	// 	}
-				  	
-				  	})
+					  		}
+						})
 
-				  	.on("mouseout", function() {
-
-				  		d3.selectAll("rect.selected")
-				  			.classed("mousedOut", false)
-						d3.selectAll("text.selected")
-				  			.classed("mousedOut", false)
-				  		var selectedElement = d3.selectAll("rect.selected").filter(function (d, i) { return i === 1;}).attr("class")
-				  		var selectedClass = selectedElement.split(" ")[0]
-				  		showStats(selectedClass)
-				  		d3.selectAll(".hovered").classed("hovered", false)
-				  	})
-		         	.on("click", function(){
-		         		d3.selectAll("rect.bar")
-		         			.classed("mousedOut", false)
-		         			.classed("selected", false)
-		         		var newYear = d3.select(this).attr('class').split(' ')[0]
-		         		d3.selectAll("." + newYear)
-		         			.classed("hovered", false)
-		         			.classed("selected", true)
-		         		d3.selectAll("text")
-		         			.classed("selected", false)
-						d3.selectAll(".year-label-" + newYear)
-					        .classed("hovered", false)
-		  					.classed("selected", true)
-		         	})
-
+					  	.on("mouseout", function() {
+					  		d3.selectAll("rect.selected")
+					  			.classed("mousedOut", false)
+							d3.selectAll("text.selected")
+					  			.classed("mousedOut", false)
+					  		var selectedElement = d3.selectAll("rect.selected").filter(function (d, i) { return i === 1;}).attr("class")
+					  		var selectedClass = selectedElement.split(" ")[0]
+					  		showStats(selectedClass)
+					  		d3.selectAll(".hovered").classed("hovered", false)
+					  	})
+			         	.on("click", function(){
+			         		d3.selectAll("rect.bar")
+			         			.classed("mousedOut", false)
+			         			.classed("selected", false)
+			         		var newYear = d3.select(this).attr('class').split(' ')[0]
+			         		d3.selectAll("." + newYear)
+			         			.classed("hovered", false)
+			         			.classed("selected", true)
+			         		d3.selectAll("text")
+			         			.classed("selected", false)
+							d3.selectAll(".year-label-" + newYear)
+						        .classed("hovered", false)
+			  					.classed("selected", true)
+			         	})
+				})
 
 
 
@@ -366,7 +348,6 @@ function drawGraph(container_width){
 			            transitionState(start, end)
 
 		        	})
-console.log('hi')
 		        showStats(yearClass)
 		        d3.selectAll("rect." + yearClass)
 		  			.classed("selected", true)
@@ -475,7 +456,7 @@ console.log('hi')
 				 	.data(layers)
 				 	.style("fill", function(d, i) { return COLORS[i]; });
 
-				layer.selectAll("rect")
+				layer.selectAll("rect.bar")
 				  	.data(function(d) {return d; })
 				   	.attr("y", function(d) {return yScale(d.data.year); })
 				   	.attr("x", function(d) { return xScale(d[0]); })
