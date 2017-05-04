@@ -4,9 +4,7 @@ var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
 var IS_PHONE = d3.select("#isPhone").style("display") == "block"
 var yearClass= "year2015"	
 var state = "selected"	
-
 function drawGraph(container_width){
-
 
 	var showStats = function(yearClass, state) {
 			d3.selectAll(".stats-text")
@@ -65,7 +63,8 @@ function drawGraph(container_width){
 		margin = {top: 20, right: 30, bottom: 50, left: 40},
 		width = container_width - margin.left - margin.right,
 		height = Math.ceil((width * aspect_height) / aspect_width) - margin.top - margin.bottom;
-	      
+var svgHeight = (container_width < 400) ? (height + margin.top) : (height + margin.top + margin.bottom)
+   
 	d3.csv("data/data.csv", function(data) {
 		  data.forEach(function(d) {
 		    d.mainstream_percent = +d.mainstream_percent;
@@ -109,13 +108,13 @@ function drawGraph(container_width){
 				$("#stacked-bar").empty()
 				svg = d3.select("#"+domEle).append("svg")
 						.attr("width", width + margin.left + margin.right)
-						.attr("height", height + margin.top + margin.bottom)
+						.attr("height", svgHeight)
 						.append("g")
-						.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+						.attr("transform", "translate(" + margin.left + "," + 0 + ")");
 				$("#year-div").empty()
 				$("#stats-div").empty()
 				var statsDivWidth = (container_width < 400) ? width*.9: width*.8
-				var yearDivWidth = width*.2 
+				var yearDivWidth = width*.17 
 
 				var yearSvg = d3.select("#year-div")
 					.append("svg")
@@ -127,7 +126,7 @@ function drawGraph(container_width){
 			            if (container_width < 400) {
 			                return (.02*width);
 			             }
-			                return (.1*width);
+			                return (.01*width);
 			          })
 			          .attr("y", width*.04)
 			          .text(function(){
@@ -140,7 +139,7 @@ function drawGraph(container_width){
 			            if (container_width < 400) {
 			                return (.01*width);
 			             }
-			                return (.09*width);
+			                return (0);
 			          })
 			          .attr("y", function() {
 			          	if (container_width < 400){
@@ -157,7 +156,7 @@ function drawGraph(container_width){
 				var statsSvg = d3.select("#stats-div")
 					.append("svg")
 					.attr("width", statsDivWidth)
-					.attr("height", height/12 + margin.top)
+					.attr("height", height/13 + margin.top)
 					 for (i=0; i<=3; i++){
 				      	if(i !== 3){
 				      		statsSvg.append("rect")
@@ -175,9 +174,9 @@ function drawGraph(container_width){
 					          })
 					          .attr("transform", function(d) { 
 					          	 if (container_width < 400) {
-					          	 	return "translate("+ width*.02 +", 0)"
+					          	 	return "translate("+ width*.02 +", "+ -2 +")"
 					          	 }
-					            	return "translate("+ width*.06 +", 0)"; 
+					            	return "translate("+ width*.01 +", 0)"; 
 					          })
 					        statsSvg.append("text")
 					          .attr("class", "stats-header")
@@ -195,7 +194,7 @@ function drawGraph(container_width){
 					          	 if (container_width < 400) {
 					          	 	return "translate("+ width*.055 +", 0)"
 					          	 }
-					            	return "translate("+ width*.09 +", 0)"; 
+					            	return "translate("+ width*.045 +", 0)"; 
 					          })
 
 					  		statsSvg.append("text")
@@ -216,7 +215,7 @@ function drawGraph(container_width){
 					            if (container_width < 400) {
 					              return "translate("+width*.06+",0)";
 					            }
-					            	return "translate("+ width*.09 +", 0)"; 
+					            	return "translate("+ width*.045 +", 0)"; 
 					          })
 				      	}
 				  	}
