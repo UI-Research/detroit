@@ -298,7 +298,6 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 						d3.selectAll(".year-label-year" + bar)
 			  				.classed(state, true)
 			  			//	console.log(d3.selectAll(".year-label-" + bar).attr('class'))
-			  			console.log(d3.select(".year" + bar).attr('class'))
 			  		}
 
 				 d3.selectAll('.wholeGraph')
@@ -325,13 +324,13 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 					  		}
 						})
 
-					  	.on("mouseout", function() {
+					  	.on("mouseout", function() { 
+					  		if (IS_PHONE_)
 					  		d3.selectAll("rect.selected")
 					  			.classed("mousedOut", false)
 							d3.selectAll("text.selected")
 					  			.classed("mousedOut", false)
 					  		var selectedElement = d3.selectAll(".bar.selected").filter(function (d, i) { return i === 1;}).attr("class")
-					  		console.log(selectedElement)
 					  		var selectedClass = selectedElement.split(" ")[0]
 					  		var state = "selected"
 					  		showStats(selectedClass, state)
@@ -444,8 +443,6 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 		}
 		var initStackedBarChartUpdate = {
 			draw: function(config) {
-
-				console.log('update')
 				chart = this,
 				domEle = config.element,
 				stackKey = config.key,
@@ -490,6 +487,15 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 				 	.transition()
 				 	.ease(d3.easeSinInOut)
 				 	.call(xAxis);
+
+				d3.select(".axis--x").selectAll(".tick")
+					.each(function(d, i) {
+			   			d3.select(this)
+							.classed("tick" + i, true)
+			   		})
+				d3.select(".tick0 text")
+					.text("$0")
+
 				d3.selectAll("text")
 					.classed("selected", false)
 					.classed("mousedOut", false)
