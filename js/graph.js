@@ -88,8 +88,8 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 				data = config.data,
 				xScale = d3.scaleLinear().rangeRound([0, width]),
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
-				xAxis_normal = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height)
-				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
+				xAxis_normal = d3.axisBottom(xScale).tickFormat(d3.format(".0%")).tickSizeInner(-height)
+				xAxis_mobile = d3.axisBottom(xScale).tickFormat(d3.format(".0%")).tickSizeInner(-height).ticks(6)
 				var xAxis = (container_width < 400) ? xAxis_mobile : xAxis_normal;
 
 				yAxis =  d3.axisLeft(yScale)
@@ -425,11 +425,15 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 
 	    }
 
-		function getTickFormat() {
+		function getTickFormat(tick) {
 			if (selectedCategory == "percent") {
-				return d3.format(".0%")
+				return d3.format(".0%")(tick)
 			} else {
-				return d3.format("$.2s")
+				if(tick == 0){
+					return d3.format("$.0s")(tick)
+				}else{
+					return d3.format("$.2s")(tick)
+				}
 			}
 		}
 		function getHeader() {
@@ -449,8 +453,8 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 				data = config.data,
 				xScale = d3.scaleLinear().rangeRound([0, width]),
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
-				xAxis_normal = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height)
-				xAxis_mobile = d3.axisBottom(xScale).tickFormat(getTickFormat()).tickSizeInner(-height).ticks(6)
+				xAxis_normal = d3.axisBottom(xScale).tickFormat(function(tick){ return getTickFormat(tick) }).tickSizeInner(-height)
+				xAxis_mobile = d3.axisBottom(xScale).tickFormat(function(tick){ return getTickFormat(tick) }).tickSizeInner(-height).ticks(6)
 				var xAxis = (container_width < 400) ? xAxis_mobile : xAxis_normal;				
 				yAxis =  d3.axisLeft(yScale)
 
@@ -493,8 +497,6 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 			   			d3.select(this)
 							.classed("tick" + i, true)
 			   		})
-				d3.select(".tick0 text")
-					.text("$0")
 
 				d3.selectAll("text")
 					.classed("selected", false)
