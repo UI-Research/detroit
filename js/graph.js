@@ -1,5 +1,5 @@
 var HEADERS =  ["MISSION", "PRIVATE", "MAINSTREAM"],
-    COLORS = ["#d2d2d2","#fdbf11","#1696d2"];
+    COLORS = ["#1696d2","#fdbf11","#d2d2d2"];
 var IS_MOBILE = d3.select("#isMobile").style("display") == "block"
 var IS_PHONE = d3.select("#isPhone").style("display") == "block"
 var yearClass= "year2015"	
@@ -257,7 +257,7 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 					.data(layers)
 					.enter().append("g")
 					.attr("class", "layer")
-					.style("fill", function(d, i) { return COLORS[i]; });
+					.style("fill", function(d, i) {return COLORS[i]; });
 
 
 				layer.selectAll("rect.bar")
@@ -325,7 +325,7 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 						})
 
 					  	.on("mouseout", function() { 
-					  		if (IS_PHONE_)
+					  		if (IS_PHONE)
 					  		d3.selectAll("rect.selected")
 					  			.classed("mousedOut", false)
 							d3.selectAll("text.selected")
