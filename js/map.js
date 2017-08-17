@@ -14,7 +14,7 @@
             container: 'map',
            // style: 'mapbox://styles/mapbox/dark-v9',
             style: 'mapbox://styles/urbaninstitute/cj6f4xa0426mm2rk33ef922w8',
-            center: [-83.1692441,42.3526897],
+            center: [-83.1692441,42.3726897],
             zoom: 13
         });
         // Add zoom and rotation controls to the map.
