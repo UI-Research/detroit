@@ -63,7 +63,7 @@ function drawGraph(container_width){
 		margin = {top: 20, right: 30, bottom: 50, left: 40},
 		width = container_width - margin.left - margin.right,
 		height = Math.ceil((width * aspect_height) / aspect_width) - margin.top - margin.bottom;
-var svgHeight = (container_width < 400) ? (height + margin.top) : (height + margin.top + margin.bottom)
+var svgHeight = (container_width < 400) ? (height + margin.top) : (height + margin.top + margin.bottom) - 35
    
 	d3.csv("data/data.csv", function(data) {
 		  data.forEach(function(d) {
