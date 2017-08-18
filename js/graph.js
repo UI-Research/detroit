@@ -429,13 +429,18 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 			if (selectedCategory == "percent") {
 				return d3.format(".0%")(tick)
 			} else {
-				if(tick == 0){
+				if(tick == 0){ 
 					return d3.format("$.0s")(tick)
+				}else{				
+					if(tick > 900000000){ 
+					return ("$1B")
 				}else{
 					return d3.format("$.2s")(tick)
+					}
 				}
 			}
 		}
+
 		function getHeader() {
 			if (selectedCategory == "percent") {
 				d3.select(".header")
@@ -453,7 +458,12 @@ var svgHeight = (container_width < 400) ? (height + margin.top) : (height + marg
 				data = config.data,
 				xScale = d3.scaleLinear().rangeRound([0, width]),
 				yScale = d3.scaleBand().rangeRound([height, 0]).padding(0.1),
-				xAxis_normal = d3.axisBottom(xScale).tickFormat(function(tick){ return getTickFormat(tick) }).tickSizeInner(-height)
+				xAxis_normal = d3.axisBottom(xScale)
+					.tickFormat(
+						function(tick){ 
+						 return getTickFormat(tick) 
+						})
+					.tickSizeInner(-height)
 				xAxis_mobile = d3.axisBottom(xScale).tickFormat(function(tick){ return getTickFormat(tick) }).tickSizeInner(-height).ticks(6)
 				var xAxis = (container_width < 400) ? xAxis_mobile : xAxis_normal;				
 				yAxis =  d3.axisLeft(yScale)

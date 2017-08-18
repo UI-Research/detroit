@@ -627,11 +627,11 @@ pointer-events: none;
     border-radius: 3px;
     bottom: 30px;
     background: rgba(255, 255, 255, 0.8);
-    font: 12px 'Lato', sans-serif;
+    font: 10px 'Lato', sans-serif;
     padding: 10px;
     position: absolute;
     left:2%;
-    bottom: 0%;
+    bottom: 8%;
     z-index: 3;
 }
 

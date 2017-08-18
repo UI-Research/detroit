@@ -12,19 +12,19 @@
         var FILTERUSE;
         var map = new mapboxgl.Map({
             container: 'map',
-           // style: 'mapbox://styles/mapbox/dark-v9',
+         //   style: 'mapbox://styles/mapbox/dark-v9',
             style: 'mapbox://styles/urbaninstitute/cj6f4xa0426mm2rk33ef922w8',
             center: [-83.1692441,42.3726897],
-            zoom: 13
+            zoom: 9.7
         });
         // Add zoom and rotation controls to the map.
         map.addControl(new mapboxgl.Navigation());
         //add some point data and style it
         map.on('load', function () {
-            // map.addSource("landUse", {
-            //     "type": "geojson",
-            //     "data": 'data/detroit2.json'
-            // });
+            map.addSource("landUse", {
+                "type": "geojson",
+                "data": 'data/detroit2.json'
+            });
             
             //  map.addLayer({
             //     "id": "landUse_fill",
@@ -46,29 +46,87 @@
             //         "fill-outline-color": "#ffffff"
             //     }
             // }); 
-
-           // map.addLayer({
-           //      "id": "tract-hover",
-           //      "type": "fill",
-           //      "source": "census_tracts",
-           //      "layout": {},
-           //      "paint": {
-           //          "fill-color": "#fdbf11",
-           //          "fill-opacity": 1
-           //      },
-           //      "filter": ["==", "GEOID10", ""]
-           //  });
-
+            //OPTION 1//
             // map.addLayer({
-            //     "id": "commercial",
-            //     "type": "fill",
+            //     "id": "all",
+            //     "type": "line",
             //     "source": "landUse",
             //     "paint": {
-            //         "fill-color": "#fdbf11"
+            //         "line-color": "#fff",
+            //         'line-width': 2
+
             //     },
-            //     "filter": ["==", "STUDY_LAND", "commercial"]
+
+             //   "filter": ["==", "STUDY_LAND", "commercial"]
                
             // }); 
+            map.addLayer({
+                "id": "commercial",
+                "type": "fill",
+                "source": "landUse",
+                "paint": {
+                    "fill-color": "#fdbf11"
+                },
+                "filter": ["==", "STUDY_LAND", "commercial"]
+               
+            }); 
+
+
+            map.addLayer({
+                "id": "exempt",
+                "type": "fill",
+                "source": "landUse",
+                "paint": {
+                    "fill-color": "#78c26d"
+                },
+                "filter": ["==", "STUDY_LAND", "exempt"]
+               
+            }); 
+            map.addLayer({
+                "id": "industrial",
+                "type": "fill",
+                "source": "landUse",
+                "paint": {
+                    "fill-color": "#1696d2"
+                },
+                "filter": ["==", "STUDY_LAND", "industrial"]
+               
+            }); 
+
+            map.addLayer({
+                "id": "institutional",
+                "type": "fill",
+                "source": "landUse",
+                "paint": {
+                    "fill-color": "#78c26d"
+                },
+                "filter": ["==", "STUDY_LAND", "institutional"]
+               
+            }); 
+
+            map.addLayer({
+                "id": "mixed",
+                "type": "fill",
+                "source": "landUse",
+                "paint": {
+                    "fill-color": "#fdbf11"
+                },
+                "filter": ["==", "STUDY_LAND", "mixed"]
+               
+            }); 
+
+            map.addLayer({
+                "id": "multi-unit",
+                "type": "fill",
+                "source": "landUse",
+                "paint": {
+                    "fill-color": "#ca5800"
+                },
+                "filter": ["==", "STUDY_LAND", "multi-unit residential"]
+               
+            }); 
+        //OPTION 1
+
             // map.addLayer({
             //     "id": "land",
             //     "type": "fill",
@@ -79,12 +137,36 @@
             //     "filter": ["==", "STUDY_LAND", "land"]
                
             // }); 
+
+            // map.addLayer({
+            //     "id": "residential",
+            //     "type": "fill",
+            //     "source": "landUse",
+            //     "paint": {
+            //         "fill-color": "#1696d2"
+            //     },
+            //     "filter": ["==", "STUDY_LAND", "residential"]
+               
+            // }); 
+
+            //         map.addLayer({
+            //     "id": "commercial",
+            //     "type": "fill",
+            //     "source": "landUse",
+            //     "paint": {
+            //         "fill-color": "#fdbf11"
+            //     },
+            //     "filter": ["==", "STUDY_LAND", "commercial"]
+               
+            // }); 
+
+
             // map.addLayer({
             //     "id": "exempt",
             //     "type": "fill",
             //     "source": "landUse",
             //     "paint": {
-            //         "fill-color": "#78c26d"
+            //         "fill-color": "#d2d2d2"
             //     },
             //     "filter": ["==", "STUDY_LAND", "exempt"]
                
@@ -105,7 +187,7 @@
             //     "type": "fill",
             //     "source": "landUse",
             //     "paint": {
-            //         "fill-color": "#ca5800"
+            //         "fill-color": "#d2d2d2"
             //     },
             //     "filter": ["==", "STUDY_LAND", "institutional"]
                
@@ -116,32 +198,24 @@
             //     "type": "fill",
             //     "source": "landUse",
             //     "paint": {
-            //         "fill-color": "#843215"
+            //         "fill-color": "#fdbf11"
             //     },
             //     "filter": ["==", "STUDY_LAND", "mixed"]
                
             // }); 
 
             // map.addLayer({
-            //     "id": "residential",
-            //     "type": "fill",
-            //     "source": "landUse",
-            //     "paint": {
-            //         "fill-color": "#1696d2"
-            //     },
-            //     "filter": ["==", "STUDY_LAND", "residential"]
-               
-            // }); 
-            // map.addLayer({
             //     "id": "multi-unit",
             //     "type": "fill",
             //     "source": "landUse",
             //     "paint": {
-            //         "fill-color": "#1696d2"
+            //         "fill-color": "#ca5800"
             //     },
-            //     "filter": ["==", "STUDY_LAND", "multi-unit"]
+            //     "filter": ["==", "STUDY_LAND", "multi-unit residential"]
                
             // }); 
+
+
 
         });
 
