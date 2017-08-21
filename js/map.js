@@ -1,5 +1,5 @@
 /*OAKLAND*/
-        mapboxgl.accessToken = '';
+        mapboxgl.accessToken = 'pk.eyJ1IjoidXJiYW5pbnN0aXR1dGUiLCJhIjoiTEJUbmNDcyJ9.mbuZTy4hI_PWXw3C3UFbDQ';
        
         var COLORS = ['#cfe8f3', '#cfe8f3','#1696d2', '#1696d2', '#0a4c6a', '#0a4c6a', '#0a4c6a', '#0a4c6a'];
         var BREAKS = {
